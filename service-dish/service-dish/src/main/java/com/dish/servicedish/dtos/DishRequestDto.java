@@ -13,7 +13,7 @@ public class DishRequestDto {
     private Long price;
     private String description;
     private String urlImage;
-    private String category;
+    private Long category;
     private String campus;
     private char role;
 
@@ -50,11 +50,11 @@ public class DishRequestDto {
         this.urlImage = urlImage;
     }
 
-    public String getCategory() {
+    public Long getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Long category) {
         this.category = category;
     }
 

@@ -1,5 +1,6 @@
 package com.dish.servicedish.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity(name = "dishe_entity")
+@Entity(name = "dish_entity")
 public class DishEntity {
 
     @Id
@@ -23,10 +24,12 @@ public class DishEntity {
     private String description;
     @Column(name = "url_image", nullable = false)
     private String urlImage;
-    @Column(name = "category", nullable = false)
-    private String category;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "category", nullable = false)
+    @JsonBackReference
+    private CategoryEntity category;
     @Column(name = "active", nullable = false)
-    private boolean active;
+    private boolean active = true;
     @Column(name = "campus", nullable = false)
     private String campus;
 
@@ -70,11 +73,11 @@ public class DishEntity {
         this.urlImage = urlImage;
     }
 
-    public String getCategory() {
+    public CategoryEntity getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(CategoryEntity category) {
         this.category = category;
     }
 

@@ -23,15 +23,17 @@ public class DishService extends DishValidations {
     @Autowired
     private DishMapper mapper;
 
-    public DishResponseDto createDishe(DishRequestDto dish) {
+    public void createDish(DishRequestDto dish) {
         if (validateRole(dish.getRole())) {
             throw new WrongRoleException("The role to create dish is not allowed");
         } else if (validatePriceNegative(dish.getPrice())) {
             throw new PriceNegativeException("The price must be positive");
-        } else return mapper.entityToResponse(repository.save(mapper.requestToEntity(dish)));
+        } else {
+            mapper.entityToResponse(repository.save(mapper.requestToEntity(dish)));
+        }
     }
 
-    public DishResponseDto getDishe(Long id) {
+    public DishResponseDto getDish(Long id) {
         DishEntity dishe = repository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException("The dish was not found"));
         return mapper.entityToResponse(dishe);
@@ -41,7 +43,7 @@ public class DishService extends DishValidations {
         return mapper.entitiesToResponses(repository.findAll());
     }
 
-    public DishResponseDto updateDishe(Long id, DishUpdateRequestDto dish) {
+    public DishResponseDto updateDishPriceCampusDescription(Long id, DishUpdateRequestDto dish) {
         Optional<DishEntity> request = repository.findById(id);
         if (request.isPresent()) {
             DishEntity data = request.get();
@@ -52,7 +54,16 @@ public class DishService extends DishValidations {
         } else throw new RecordNotFoundException("The dish was not found");
     }
 
-    public boolean deleteDishe(Long id) {
+    public DishResponseDto updateDishState(Long id) {
+        Optional<DishEntity> request = repository.findById(id);
+        if (request.isPresent()) {
+            DishEntity data = request.get();
+            data.setActive(!data.isActive());
+            return mapper.entityToResponse(repository.save(data));
+        } else throw new RecordNotFoundException("The dish was not found");
+    }
+
+    public boolean deleteDish(Long id) {
         if (repository.findById(id).isPresent()) {
             repository.deleteById(id);
             return true;

@@ -1,5 +1,6 @@
 package com.dish.servicedish.dtos;
 
+import com.dish.servicedish.entity.CategoryEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -13,8 +14,9 @@ public class DishResponseDto {
     private Long price;
     private String description;
     private String urlImage;
-    private String category;
+    private CategoryEntity category;
     private String campus;
+    private boolean active;
 
 
     public String getName() {
@@ -49,11 +51,11 @@ public class DishResponseDto {
         this.urlImage = urlImage;
     }
 
-    public String getCategory() {
+    public CategoryEntity getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(CategoryEntity category) {
         this.category = category;
     }
 
@@ -63,5 +65,13 @@ public class DishResponseDto {
 
     public void setCampus(String campus) {
         this.campus = campus;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

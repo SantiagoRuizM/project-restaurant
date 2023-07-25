@@ -23,13 +23,16 @@ public class DishController {
     private DishMapper mapper;
 
     @PostMapping("/create")
-    public ResponseEntity<DishResponseDto> createDishe(@RequestBody DishRequestDto dish) {
-        return new ResponseEntity<>(service.createDishe(dish), HttpStatus.CREATED);
+    public ResponseEntity<Map<String, String>> createDish(@RequestBody DishRequestDto dish) {
+        service.createDish(dish);
+        Map<String, String> map = new HashMap<>();
+        map.put("message", "Created success!");
+        return new ResponseEntity<>(map, HttpStatus.CREATED);
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<DishResponseDto> getDishe(@PathVariable Long id) {
-        return new ResponseEntity<>(service.getDishe(id), HttpStatus.OK);
+    public ResponseEntity<DishResponseDto> getDish(@PathVariable Long id) {
+        return new ResponseEntity<>(service.getDish(id), HttpStatus.OK);
     }
 
     @GetMapping("/getAll")
@@ -38,13 +41,18 @@ public class DishController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<DishResponseDto> updateDishe(@PathVariable Long id, @RequestBody DishUpdateRequestDto dish) {
-        return new ResponseEntity<>(service.updateDishe(id, dish), HttpStatus.ACCEPTED);
+    public ResponseEntity<DishResponseDto> updateDish(@PathVariable Long id, @RequestBody DishUpdateRequestDto dish) {
+        return new ResponseEntity<>(service.updateDishPriceCampusDescription(id, dish), HttpStatus.ACCEPTED);
+    }
+
+    @PutMapping("/update/state/{id}")
+    public ResponseEntity<DishResponseDto> updateDish(@PathVariable Long id) {
+        return new ResponseEntity<>(service.updateDishState(id), HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Map<String, String>> deleteDishe(@PathVariable Long id) {
-        if (service.deleteDishe(id)) {
+    public ResponseEntity<Map<String, String>> deleteDish(@PathVariable Long id) {
+        if (service.deleteDish(id)) {
             Map<String, String> map = new HashMap<>();
             map.put("message", "Deleted success!");
             return new ResponseEntity<>(map, HttpStatus.ACCEPTED);

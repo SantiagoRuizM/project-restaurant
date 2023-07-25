@@ -12,6 +12,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface DishMapper {
 
+    @Mapping(source = "category.id", target = "category")
     DishRequestDto entityToRequest(DishEntity dishEntity);
     List<DishRequestDto> entitiesToRequests(List<DishEntity> dishesEntities);
 
@@ -27,10 +28,7 @@ public interface DishMapper {
     List<DishResponseDto> entitiesToResponses(List<DishEntity> dishesEntities);
 
     @InheritInverseConfiguration
-    @Mappings({
-            @Mapping(target = "id", ignore = true),
-            @Mapping(target = "active", ignore = true)
-    })
+    @Mapping(target = "id", ignore = true)
     DishEntity responseToEntity(DishResponseDto dishResponseDto);
     List<DishEntity> responsesToEntities(List<DishResponseDto> dishesResponseDto);
 }
