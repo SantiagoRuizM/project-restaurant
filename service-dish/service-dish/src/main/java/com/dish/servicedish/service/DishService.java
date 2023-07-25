@@ -13,6 +13,7 @@ import com.dish.servicedish.repository.DishRepository;
 import com.dish.servicedish.validations.DishValidations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,14 +35,20 @@ public class DishService extends DishValidations {
         }
     }
 
+    @Transactional(readOnly = true)
     public DishResponseDto getDish(Long id) {
         DishEntity dishe = repository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException("The dish was not found"));
         return mapper.entityToResponse(dishe);
     }
 
+    @Transactional(readOnly = true)
     public List<DishResponseDto> getAllDishes() {
         return mapper.entitiesToResponses(repository.findAll());
+    }
+
+    public List<DishResponseDto> getAllDishesCategoryCampus(Long category, Long campus) {
+        return mapper.entitiesToResponses(repository.findByCategoryIdOrCampusId(category, campus));
     }
 
     public DishResponseDto updateDishPriceCampusDescription(Long id, DishUpdateRequestDto dish) {

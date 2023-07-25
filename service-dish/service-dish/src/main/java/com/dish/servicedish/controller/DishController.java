@@ -40,6 +40,11 @@ public class DishController {
         return new ResponseEntity<>(service.getAllDishes(), HttpStatus.OK);
     }
 
+    @GetMapping("/getAll/{category}/{campus}")
+    public ResponseEntity<List<DishResponseDto>> getAllDishesCategoryCampus(@PathVariable Long category, @PathVariable Long campus) {
+        return new ResponseEntity<>(service.getAllDishesCategoryCampus(category, campus), HttpStatus.OK);
+    }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<DishResponseDto> updateDish(@PathVariable Long id, @RequestBody DishUpdateRequestDto dish) {
         return new ResponseEntity<>(service.updateDishPriceCampusDescription(id, dish), HttpStatus.ACCEPTED);
