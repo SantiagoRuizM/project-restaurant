@@ -6,23 +6,27 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.List;
 
-@Entity(name = "category_entity")
+@Entity(name = "campus_entity")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
-public class CategoryEntity {
+public class CampusEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "campus")
     @JsonManagedReference
     @JsonIgnore
     private List<DishEntity> dishEntities;
 
-    public CategoryEntity() {
+    public CampusEntity() {
     }
 
-    public CategoryEntity(Long id, String name, List<DishEntity> dishEntities) {
+    public CampusEntity(Long id) {
+        this.id = id;
+    }
+
+    public CampusEntity(Long id, String name, List<DishEntity> dishEntities) {
         this.id = id;
         this.name = name;
         this.dishEntities = dishEntities;

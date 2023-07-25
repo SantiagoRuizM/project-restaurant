@@ -1,13 +1,8 @@
 package com.dish.servicedish.dtos;
 
+import com.dish.servicedish.entity.CampusEntity;
 import com.dish.servicedish.entity.CategoryEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class DishResponseDto {
 
     private String name;
@@ -15,9 +10,21 @@ public class DishResponseDto {
     private String description;
     private String urlImage;
     private CategoryEntity category;
-    private String campus;
+    private CampusEntity campus;
     private boolean active;
 
+    public DishResponseDto() {
+    }
+
+    public DishResponseDto(String name, Long price, String description, String urlImage, CategoryEntity category, CampusEntity campus, boolean active) {
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.urlImage = urlImage;
+        this.category = category;
+        this.campus = campus;
+        this.active = active;
+    }
 
     public String getName() {
         return name;
@@ -59,11 +66,11 @@ public class DishResponseDto {
         this.category = category;
     }
 
-    public String getCampus() {
+    public CampusEntity getCampus() {
         return campus;
     }
 
-    public void setCampus(String campus) {
+    public void setCampus(CampusEntity campus) {
         this.campus = campus;
     }
 

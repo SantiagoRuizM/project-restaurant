@@ -2,13 +2,7 @@ package com.dish.servicedish.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Entity(name = "dish_entity")
 public class DishEntity {
 
@@ -30,8 +24,24 @@ public class DishEntity {
     private CategoryEntity category;
     @Column(name = "active", nullable = false)
     private boolean active = true;
-    @Column(name = "campus", nullable = false)
-    private String campus;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "campus", nullable = false)
+    @JsonBackReference
+    private CampusEntity campus;
+
+    public DishEntity() {
+    }
+
+    public DishEntity(Long id, String name, Long price, String description, String urlImage, CategoryEntity category, boolean active, CampusEntity campus) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.urlImage = urlImage;
+        this.category = category;
+        this.active = active;
+        this.campus = campus;
+    }
 
     public Long getId() {
         return id;
@@ -89,11 +99,11 @@ public class DishEntity {
         this.active = active;
     }
 
-    public String getCampus() {
+    public CampusEntity getCampus() {
         return campus;
     }
 
-    public void setCampus(String campus) {
+    public void setCampus(CampusEntity campus) {
         this.campus = campus;
     }
 }

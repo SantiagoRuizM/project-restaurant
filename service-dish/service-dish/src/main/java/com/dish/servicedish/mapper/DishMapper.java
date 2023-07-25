@@ -12,7 +12,10 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface DishMapper {
 
-    @Mapping(source = "category.id", target = "category")
+    @Mappings({
+        @Mapping(source = "category.id", target = "category"),
+        @Mapping(source = "campus.id", target = "campus")
+    })
     DishRequestDto entityToRequest(DishEntity dishEntity);
     List<DishRequestDto> entitiesToRequests(List<DishEntity> dishesEntities);
 

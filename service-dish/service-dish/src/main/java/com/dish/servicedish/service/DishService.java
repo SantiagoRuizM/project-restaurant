@@ -3,6 +3,7 @@ package com.dish.servicedish.service;
 import com.dish.servicedish.dtos.DishRequestDto;
 import com.dish.servicedish.dtos.DishResponseDto;
 import com.dish.servicedish.dtos.DishUpdateRequestDto;
+import com.dish.servicedish.entity.CampusEntity;
 import com.dish.servicedish.entity.DishEntity;
 import com.dish.servicedish.exceptions.PriceNegativeException;
 import com.dish.servicedish.exceptions.RecordNotFoundException;
@@ -48,7 +49,7 @@ public class DishService extends DishValidations {
         if (request.isPresent()) {
             DishEntity data = request.get();
             data.setPrice(dish.getPrice());
-            data.setCampus(dish.getCampus());
+            data.setCampus(new CampusEntity(dish.getCampus()));
             data.setDescription(dish.getDescription());
             return mapper.entityToResponse(repository.save(data));
         } else throw new RecordNotFoundException("The dish was not found");

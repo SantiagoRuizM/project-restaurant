@@ -1,18 +1,19 @@
 package com.dish.servicedish.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class DishUpdateRequestDto {
 
     private Long price;
     private String description;
-    private String campus;
+    private Long campus;
 
+    public DishUpdateRequestDto() {
+    }
+
+    public DishUpdateRequestDto(Long price, String description, Long campus) {
+        this.price = price;
+        this.description = description;
+        this.campus = campus;
+    }
 
     public Long getPrice() {
         return price;
@@ -30,11 +31,11 @@ public class DishUpdateRequestDto {
         this.description = description;
     }
 
-    public String getCampus() {
+    public Long getCampus() {
         return campus;
     }
 
-    public void setCampus(String campus) {
+    public void setCampus(Long campus) {
         this.campus = campus;
     }
 }

@@ -7,6 +7,9 @@ public class ResponseErrorDto {
     private String message;
     private HttpStatus status;
 
+    public ResponseErrorDto() {
+    }
+
     public ResponseErrorDto(String message, HttpStatus status) {
         this.message = message;
         this.status = status;
