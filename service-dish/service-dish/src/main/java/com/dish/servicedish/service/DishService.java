@@ -31,7 +31,7 @@ public class DishService extends DishValidations {
         } else if (validatePriceNegative(dish.getPrice())) {
             throw new PriceNegativeException("The price must be positive");
         } else {
-            mapper.entityToResponse(repository.save(mapper.requestToEntity(dish)));
+            repository.save(mapper.requestToEntity(dish));
         }
     }
 
@@ -47,8 +47,14 @@ public class DishService extends DishValidations {
         return mapper.entitiesToResponses(repository.findAll());
     }
 
+    @Transactional(readOnly = true)
     public List<DishResponseDto> getAllDishesCategoryCampus(Long category, Long campus) {
         return mapper.entitiesToResponses(repository.findByCategoryIdOrCampusId(category, campus));
+    }
+
+    @Transactional(readOnly = true)
+    public List<DishResponseDto> getAllDishesActive() {
+        return mapper.entitiesToResponses(repository.findByActive(true));
     }
 
     public DishResponseDto updateDishPriceCampusDescription(Long id, DishUpdateRequestDto dish) {
