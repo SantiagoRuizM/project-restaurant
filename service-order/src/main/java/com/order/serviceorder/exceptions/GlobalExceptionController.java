@@ -19,4 +19,9 @@ public class GlobalExceptionController {
     public ResponseEntity<ResponseErrorDto> handlerInactiveDishException(InactiveDishException inactiveDishException) {
         return new ResponseEntity<>(new ResponseErrorDto(inactiveDishException.getMessage(), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(IncorrectDishCampusException.class)
+    public ResponseEntity<ResponseErrorDto> handlerIncorrectDishCampusException(IncorrectDishCampusException incorrectDishCampusException) {
+        return new ResponseEntity<>(new ResponseErrorDto(incorrectDishCampusException.getMessage(), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+    }
 }

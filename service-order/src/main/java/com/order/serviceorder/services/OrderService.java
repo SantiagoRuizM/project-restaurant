@@ -8,6 +8,7 @@ import com.order.serviceorder.entities.DishEntity;
 import com.order.serviceorder.entities.OrderEntity;
 import com.order.serviceorder.exceptions.DishFailedResponseController;
 import com.order.serviceorder.exceptions.InactiveDishException;
+import com.order.serviceorder.exceptions.IncorrectDishCampusException;
 import com.order.serviceorder.mappers.DishMapper;
 import com.order.serviceorder.mappers.OrderMapper;
 import com.order.serviceorder.repositories.OrderRepository;
@@ -30,19 +31,21 @@ public class OrderService {
     private RestTemplate restTemplate;
 
     public void createOrder(OrderRequestDto dto) {
-        try {
-            OrderEntity order = orderMapper.requestToOrder(dto);
-            String dishes = "";
-            for ( DishForOrderDto value : dto.getDish() ) {
-                DishEntity entity = restTemplate.getForObject("http://localhost:8081/serviceDishes/dishes/get/" + value.getIdDish(), DishEntity.class);
-                if (entity.isActive()) dishes += value.getIdDish() + " " + value.getQuantity() + " ";
-                else throw new InactiveDishException("The dish with id " + value.getIdDish() + ": is not active");
+        OrderEntity order = orderMapper.requestToOrder(dto);
+        String dishes = "";
+        for ( DishForOrderDto value : dto.getDish() ) {
+            DishEntity entity;
+            try {
+                entity = restTemplate.getForObject("http://localhost:8081/serviceDishes/dishes/get/" + value.getIdDish(), DishEntity.class);
+            } catch (Exception e) {
+                throw new DishFailedResponseController(e.getMessage());
             }
-            order.setDishes(dishes);
-            repository.save(order);
-        } catch (Exception e) {
-            throw new DishFailedResponseController(e.getMessage());
+            if (entity.isActive()) dishes += value.getIdDish() + " " + value.getQuantity() + " ";
+            else throw new InactiveDishException("The dish with id " + value.getIdDish() + ": is not active");
+            if (entity.getCampus().getId() != dto.getCampus()) throw new IncorrectDishCampusException("The dish with id " + value.getIdDish() + ": is not valid in your campus");
         }
+        order.setDishes(dishes);
+        repository.save(order);
     }
 
     public List<OrderResponseDto> getAllOrders() {
