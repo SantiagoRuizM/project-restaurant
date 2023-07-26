@@ -8,7 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="server-eureka" />
       </profile>
-      <profile name="Annotation profile for service-order" enabled="true">
+      <profile name="Annotation profile for service-dish" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -16,15 +16,10 @@
           <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.5.5.Final/mapstruct-processor-1.5.5.Final.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.5.5.Final/mapstruct-1.5.5.Final.jar" />
         </processorPath>
-        <module name="service-order" />
         <module name="service-dish" />
+        <module name="service-order" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="server-eureka" target="19" />
-      <module name="service-dish" target="19" />
-      <module name="service-order" target="19" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
