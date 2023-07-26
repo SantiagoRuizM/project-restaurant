@@ -1,7 +1,6 @@
 package com.order.serviceorder.dtos;
 
-import com.order.serviceorder.entities.CampusEntity;
-import com.order.serviceorder.entities.CategoryEntity;
+import com.order.serviceorder.externals.CategoryEntity;
 
 public class DishResponseDto {
 

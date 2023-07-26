@@ -4,7 +4,7 @@ import com.order.serviceorder.dtos.DishForOrderDto;
 import com.order.serviceorder.dtos.DishResponseDto;
 import com.order.serviceorder.dtos.OrderRequestDto;
 import com.order.serviceorder.dtos.OrderResponseDto;
-import com.order.serviceorder.entities.DishEntity;
+import com.order.serviceorder.externals.DishEntity;
 import com.order.serviceorder.entities.OrderEntity;
 import com.order.serviceorder.exceptions.DishFailedResponseController;
 import com.order.serviceorder.exceptions.InactiveDishException;

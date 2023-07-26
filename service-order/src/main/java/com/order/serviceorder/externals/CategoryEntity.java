@@ -1,4 +1,4 @@
-package com.order.serviceorder.entities;
+package com.order.serviceorder.externals;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

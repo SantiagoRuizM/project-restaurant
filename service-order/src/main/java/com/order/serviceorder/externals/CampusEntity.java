@@ -1,4 +1,4 @@
-package com.order.serviceorder.entities;
+package com.order.serviceorder.externals;
 
 public class CampusEntity {
 

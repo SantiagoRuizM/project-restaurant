@@ -1,6 +1,6 @@
 package com.order.serviceorder.dtos;
 
-import com.order.serviceorder.entities.CampusEntity;
+import com.order.serviceorder.externals.CampusEntity;
 
 import java.util.List;
 

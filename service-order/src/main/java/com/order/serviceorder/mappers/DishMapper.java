@@ -1,8 +1,7 @@
 package com.order.serviceorder.mappers;
 
 import com.order.serviceorder.dtos.DishResponseDto;
-import com.order.serviceorder.entities.DishEntity;
-import org.mapstruct.InheritInverseConfiguration;
+import com.order.serviceorder.externals.DishEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
