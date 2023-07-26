@@ -6,13 +6,13 @@ import com.order.serviceorder.dtos.OrderRequestDto;
 import com.order.serviceorder.dtos.OrderResponseDto;
 import com.order.serviceorder.entities.DishEntity;
 import com.order.serviceorder.entities.OrderEntity;
+import com.order.serviceorder.exceptions.DishFailedResponseController;
 import com.order.serviceorder.mappers.DishMapper;
 import com.order.serviceorder.mappers.OrderMapper;
 import com.order.serviceorder.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,23 +39,27 @@ public class OrderService {
     }
 
     public List<OrderResponseDto> getAllOrders() {
-        List<OrderEntity> orderEntities = repository.findAll();
-        List<OrderResponseDto> responseDtos = new ArrayList<>();
-        for ( OrderEntity order : orderEntities ) {
-            OrderResponseDto responseDto = new OrderResponseDto();
-            responseDto.setState(order.getState());
-            String[] dishes = order.getDishes().split(" ");
-            List<DishResponseDto> dishEntities = new ArrayList<>();
-            for (int i = 0; i < dishes.length; i += 2) {
-                DishEntity entity = restTemplate.getForObject("http://localhost:8081/serviceDishes/dishes/get/" + dishes[i], DishEntity.class);
-                DishResponseDto dish = dishMapper.entityToResponse(entity);
-                if (i == 0) responseDto.setCampus(entity.getCampus());
-                dish.setQuantity(Integer.parseInt(dishes[i + 1]));
-                dishEntities.add(dish);
+        try {
+            List<OrderEntity> orderEntities = repository.findAll();
+            List<OrderResponseDto> responseDtos = new ArrayList<>();
+            for ( OrderEntity order : orderEntities ) {
+                OrderResponseDto responseDto = new OrderResponseDto();
+                responseDto.setState(order.getState());
+                String[] dishes = order.getDishes().split(" ");
+                List<DishResponseDto> dishEntities = new ArrayList<>();
+                for (int i = 0; i < dishes.length; i += 2) {
+                    DishEntity entity = restTemplate.getForObject("http://localhost:8081/serviceDishes/dishes/get/" + dishes[i], DishEntity.class);
+                    DishResponseDto dish = dishMapper.entityToResponse(entity);
+                    if (i == 0) responseDto.setCampus(entity.getCampus());
+                    dish.setQuantity(Integer.parseInt(dishes[i + 1]));
+                    dishEntities.add(dish);
+                }
+                responseDto.setDishes(dishEntities);
+                responseDtos.add(responseDto);
             }
-            responseDto.setDishes(dishEntities);
-            responseDtos.add(responseDto);
+            return responseDtos;
+        } catch (Exception e) {
+            throw new DishFailedResponseController(e.getMessage());
         }
-        return responseDtos;
     }
 }
