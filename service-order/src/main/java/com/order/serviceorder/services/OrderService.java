@@ -1,9 +1,9 @@
 package com.order.serviceorder.services;
 
-import com.order.serviceorder.dtos.DishForOrderDto;
-import com.order.serviceorder.dtos.DishResponseDto;
-import com.order.serviceorder.dtos.OrderRequestDto;
-import com.order.serviceorder.dtos.OrderResponseDto;
+import com.order.serviceorder.dtos.dish.DishForOrderDto;
+import com.order.serviceorder.dtos.dish.DishResponseDto;
+import com.order.serviceorder.dtos.order.OrderRequestDto;
+import com.order.serviceorder.dtos.order.OrderResponseDto;
 import com.order.serviceorder.externals.DishEntity;
 import com.order.serviceorder.entities.OrderEntity;
 import com.order.serviceorder.exceptions.DishFailedResponseController;
@@ -11,6 +11,7 @@ import com.order.serviceorder.exceptions.InactiveDishException;
 import com.order.serviceorder.exceptions.IncorrectDishCampusException;
 import com.order.serviceorder.mappers.DishMapper;
 import com.order.serviceorder.mappers.OrderMapper;
+import com.order.serviceorder.mappers.UserMapper;
 import com.order.serviceorder.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,8 @@ public class OrderService {
     private OrderMapper orderMapper;
     @Autowired
     private DishMapper dishMapper;
+    @Autowired
+    private UserMapper userMapper;
     @Autowired
     private RestTemplate restTemplate;
 
@@ -55,6 +58,7 @@ public class OrderService {
             for ( OrderEntity order : orderEntities ) {
                 OrderResponseDto responseDto = new OrderResponseDto();
                 responseDto.setState(order.getState());
+                responseDto.setUser(userMapper.entityToRequest(order.getUserOrder()));
                 String[] dishes = order.getDishes().split(" ");
                 List<DishResponseDto> dishEntities = new ArrayList<>();
                 for (int i = 0; i < dishes.length; i += 2) {
