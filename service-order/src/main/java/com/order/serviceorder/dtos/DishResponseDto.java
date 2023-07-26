@@ -8,17 +8,15 @@ public class DishResponseDto {
     private String name;
     private Long price;
     private CategoryEntity category;
-    private CampusEntity campus;
     private Integer quantity;
 
     public DishResponseDto() {
     }
 
-    public DishResponseDto(String name, Long price, CategoryEntity category, CampusEntity campus, Integer quantity) {
+    public DishResponseDto(String name, Long price, CategoryEntity category, Integer quantity) {
         this.name = name;
         this.price = price;
         this.category = category;
-        this.campus = campus;
         this.quantity = quantity;
     }
 
@@ -44,14 +42,6 @@ public class DishResponseDto {
 
     public void setCategory(CategoryEntity category) {
         this.category = category;
-    }
-
-    public CampusEntity getCampus() {
-        return campus;
-    }
-
-    public void setCampus(CampusEntity campus) {
-        this.campus = campus;
     }
 
     public Integer getQuantity() {

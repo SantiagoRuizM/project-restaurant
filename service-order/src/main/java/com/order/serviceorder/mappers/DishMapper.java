@@ -16,7 +16,6 @@ public interface DishMapper {
     DishResponseDto entityToResponse(DishEntity entity);
     List<DishResponseDto> entitiesToResponses(List<DishEntity> entities);
 
-    @InheritInverseConfiguration
     @Mappings({
             @Mapping(target = "description", ignore = true),
             @Mapping(target = "urlImage", ignore = true),
