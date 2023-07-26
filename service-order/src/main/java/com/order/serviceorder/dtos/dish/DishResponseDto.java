@@ -1,4 +1,4 @@
-package com.order.serviceorder.dtos;
+package com.order.serviceorder.dtos.dish;
 
 import com.order.serviceorder.externals.CategoryEntity;
 

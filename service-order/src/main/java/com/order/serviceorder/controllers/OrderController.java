@@ -1,7 +1,7 @@
 package com.order.serviceorder.controllers;
 
-import com.order.serviceorder.dtos.OrderRequestDto;
-import com.order.serviceorder.dtos.OrderResponseDto;
+import com.order.serviceorder.dtos.order.OrderRequestDto;
+import com.order.serviceorder.dtos.order.OrderResponseDto;
 import com.order.serviceorder.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

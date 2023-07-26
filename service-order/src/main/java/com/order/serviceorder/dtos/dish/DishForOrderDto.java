@@ -1,4 +1,4 @@
-package com.order.serviceorder.dtos;
+package com.order.serviceorder.dtos.dish;
 
 public class DishForOrderDto {
 
