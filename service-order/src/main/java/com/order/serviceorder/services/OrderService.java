@@ -7,6 +7,7 @@ import com.order.serviceorder.dtos.OrderResponseDto;
 import com.order.serviceorder.entities.DishEntity;
 import com.order.serviceorder.entities.OrderEntity;
 import com.order.serviceorder.exceptions.DishFailedResponseController;
+import com.order.serviceorder.exceptions.InactiveDishException;
 import com.order.serviceorder.mappers.DishMapper;
 import com.order.serviceorder.mappers.OrderMapper;
 import com.order.serviceorder.repositories.OrderRepository;
@@ -29,13 +30,19 @@ public class OrderService {
     private RestTemplate restTemplate;
 
     public void createOrder(OrderRequestDto dto) {
-        OrderEntity order = orderMapper.requestToOrder(dto);
-        String dishes = "";
-        for ( DishForOrderDto value : dto.getDish() ) {
-            dishes += value.getIdDish() + " " + value.getQuantity() + " ";
+        try {
+            OrderEntity order = orderMapper.requestToOrder(dto);
+            String dishes = "";
+            for ( DishForOrderDto value : dto.getDish() ) {
+                DishEntity entity = restTemplate.getForObject("http://localhost:8081/serviceDishes/dishes/get/" + value.getIdDish(), DishEntity.class);
+                if (entity.isActive()) dishes += value.getIdDish() + " " + value.getQuantity() + " ";
+                else throw new InactiveDishException("The dish with id " + value.getIdDish() + ": is not active");
+            }
+            order.setDishes(dishes);
+            repository.save(order);
+        } catch (Exception e) {
+            throw new DishFailedResponseController(e.getMessage());
         }
-        order.setDishes(dishes);
-        repository.save(order);
     }
 
     public List<OrderResponseDto> getAllOrders() {

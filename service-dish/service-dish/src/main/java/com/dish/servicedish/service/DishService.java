@@ -38,7 +38,7 @@ public class DishService extends DishValidations {
     @Transactional(readOnly = true)
     public DishResponseDto getDish(Long id) {
         DishEntity dishe = repository.findById(id)
-                .orElseThrow(() -> new RecordNotFoundException("The dish was not found"));
+                .orElseThrow(() -> new RecordNotFoundException("The dish with id " + id + ": was not found"));
         return mapper.entityToResponse(dishe);
     }
 
