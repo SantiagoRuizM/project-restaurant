@@ -3,6 +3,11 @@ package com.dish.servicedish.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
+
+/**
+ * This class represents the Dish entity, which corresponds to a single recipe.
+ * It contains information about the name, price, description, image URL, category, and status of the dish.
+ */
 @Entity(name = "dish_entity")
 public class DishEntity {
 
