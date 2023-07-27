@@ -11,7 +11,7 @@ public class OrderEntity {
     @Column(name = "id", nullable = false)
     private Long id;
     @Column(name = "dishes", nullable = false)
-    private String dishes; //No deberia ir una lista de platos aqui? o es una orden por plato? 1:1. puse que una orden tiene muchos platos N:1 en el diagrama
+    private String dishes;
     @Column(name = "campus", nullable = false)
     private Long campus;
     @Column(name = "state", nullable = false)

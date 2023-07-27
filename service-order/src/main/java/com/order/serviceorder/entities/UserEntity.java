@@ -19,7 +19,7 @@ public class UserEntity {
     private String name;
     @Column(name = "order_active", nullable = false)
     private boolean orderActive = false;
-    @OneToMany(mappedBy = "userOrder") //Aqui si es muchas ordenes por usuario? N:1, Habia puesto la relacion entre ordenes y usuarios como 1:1 en el diagrama
+    @OneToMany(mappedBy = "userOrder")
     @JsonManagedReference
     @JsonIgnore
     private List<OrderEntity> orderEntities;

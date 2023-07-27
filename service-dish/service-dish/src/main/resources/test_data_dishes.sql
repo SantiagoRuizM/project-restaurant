@@ -1,0 +1,51 @@
+use serviceDishes
+
+select * from category_entity
+insert into category_entity (name) values ('Comida de mar'),('Comida típica'),('Comida rápida'),('Comida de temporada'),('Fritos')
+
+select * from campus_entity
+insert into campus_entity (name) values ('Medellín'),('Sabaneta'),('Bello'),('Sabaneta'),('Envigado')
+
+SELECT * FROM dish_entity
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Ceviche de camarones', 12000, 'Deliciosa combinación de camarones con limón y ají', 'https://example.com/ceviche_cam.jpg', 1, 1, 1)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Arepa paisa', 6000, 'Arepa tradicional rellena de carne desmechada y aguacate', 'https://example.com/arepa_paisa.jpg', 2, 1, 2)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Hamburguesa gourmet', 15000, 'Exquisita hamburguesa con carne angus y queso brie', 'https://example.com/hamburguesa_gourmet.jpg', 3, 1, 1)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Ensalada de frutas frescas', 8000, 'Refrescante ensalada de frutas de temporada', 'https://example.com/ensalada_frutas.jpg', 4, 1, 3)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Patacón con hogao', 5000, 'Patacón crocante acompañado de hogao colombiano', 'https://example.com/patacon_hogao.jpg', 5, 0, 5)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Sushi fusión', 18000, 'Sushi innovador con toque de fusión asiática', 'https://example.com/sushi_fusion.jpg', 1, 1, 2)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Parrillada argentina', 25000, 'Exquisita parrillada con cortes de carne premium', 'https://example.com/parrillada_arg.jpg', 2, 1, 4)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Hotdog Tex-Mex', 10000, 'Hotdog al estilo tex-mex con jalapeños y guacamole', 'https://example.com/hotdog_texmex.jpg', 3, 1, 1)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Crema de calabaza', 7000, 'Deliciosa crema de calabaza con toque de canela', 'https://example.com/crema_calabaza.jpg', 4, 1, 3)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Arepas rellenas', 8000, 'Variedad de arepas rellenas con ingredientes a elección', 'https://example.com/arepas_rellenas.jpg', 5, 0, 5)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Ceviche de pescado', 11000, 'Ceviche fresco de pescado con cítricos', 'https://example.com/ceviche_pescado.jpg', 1, 1, 3)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Empanadas de carne', 5000, 'Empanadas caseras rellenas de carne molida', 'https://example.com/empanadas_carne.jpg', 2, 1, 4)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Pizza vegetariana', 12000, 'Pizza con variedad de vegetales frescos', 'https://example.com/pizza_vegetariana.jpg', 3, 1, 1)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Helado de fresa', 6000, 'Helado cremoso de fresa', 'https://example.com/helado_fresa.jpg', 4, 1, 2)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Buñuelos colombianos', 4000, 'Buñuelos esponjosos de queso', 'https://example.com/bunuelos.jpg', 5, 0, 3)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Sushi clásico', 16000, 'Sushi tradicional con salmón y aguacate', 'https://example.com/sushi_clasico.jpg', 1, 1, 5)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Asado de tira', 22000, 'Asado de tira argentino a la parrilla', 'https://example.com/asado_tira.jpg', 2, 1, 1)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Tacos al pastor', 9000, 'Tacos mexicanos al pastor con piña', 'https://example.com/tacos_pastor.jpg', 3, 1, 4)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Sopa de lentejas', 7000, 'Sopa reconfortante de lentejas', 'https://example.com/sopa_lentejas.jpg', 4, 1, 2)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Tostones con guacamole', 5500, 'Tostones crujientes con guacamole', 'https://example.com/tostones_guacamole.jpg', 5, 0, 5)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Camarones al ajillo', 13000, 'Camarones salteados con ajo y mantequilla', 'https://example.com/camarones_ajillo.jpg', 1, 1, 3)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Pernil de cerdo', 18000, 'Pernil de cerdo asado con especias', 'https://example.com/pernil_cerdo.jpg', 2, 1, 4)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Pasta alfredo', 10000, 'Pasta con salsa alfredo cremosa', 'https://example.com/pasta_alfredo.jpg', 3, 0, 1)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Mango sticky rice', 8000, 'Postre tailandés de mango y arroz pegajoso', 'https://example.com/mango_sticky_rice.jpg', 4, 1, 2)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Tequeños venezolanos', 5000, 'Deliciosos tequeños de queso', 'https://example.com/tequenos.jpg', 5, 1, 3)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Sushi tempura', 17000, 'Sushi crujiente con tempura', 'https://example.com/sushi_tempura.jpg', 1, 1, 1)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Churrasco a la brasa', 23000, 'Churrasco de carne jugoso a la brasa', 'https://example.com/churrasco.jpg', 2, 1, 5)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Burritos mexicanos', 9500, 'Burritos rellenos de carne y frijoles', 'https://example.com/burritos_mex.jpg', 3, 1, 3)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Gazpacho andaluz', 7500, 'Refrescante sopa fría de tomate', 'https://example.com/gazpacho_andaluz.jpg', 4, 1, 4)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Yuca frita con hogao', 6000, 'Yuca frita acompañada de hogao colombiano', 'https://example.com/yuca_hogao.jpg', 5, 1, 1)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Ceviche mixto', 14000, 'Ceviche variado con mariscos y pescado', 'https://example.com/ceviche_mixto.jpg', 1, 1, 2)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Lomo saltado', 19000, 'Plato peruano de lomo de res salteado', 'https://example.com/lomo_saltado.jpg', 2, 1, 1)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Spaghetti bolognese', 11000, 'Spaghetti con salsa bolognesa', 'https://example.com/spaghetti_bolo.jpg', 3, 1, 5)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Tiramisú italiano', 8500, 'Postre italiano de café y mascarpone', 'https://example.com/tiramisu.jpg', 4, 1, 4)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Empanadas de queso', 4500, 'Empanadas horneadas rellenas de queso', 'https://example.com/empanadas_queso.jpg', 5, 1, 2)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Sushi rainbow', 19000, 'Sushi colorido con variedad de pescados', 'https://example.com/sushi_rainbow.jpg', 1, 1, 3)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Milanesa napolitana', 20000, 'Milanesa de carne con salsa napolitana y queso', 'https://example.com/milanesa_napo.jpg', 2, 1, 1)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Tacos de pescado', 10000, 'Tacos de pescado fresco con col morada', 'https://example.com/tacos_pescado.jpg', 3, 1, 5)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Sopa de champiñones', 7800, 'Sopa reconfortante de champiñones', 'https://example.com/sopa_champinones.jpg', 4, 1, 3)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Pastel de yuca', 6200, 'Pastel de yuca con carne y huevo', 'https://example.com/pastel_yuca.jpg', 5, 1, 4)
+
+
