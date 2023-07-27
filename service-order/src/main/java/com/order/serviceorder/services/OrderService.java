@@ -14,6 +14,10 @@ import com.order.serviceorder.mappers.UserMapper;
 import com.order.serviceorder.repositories.OrderRepository;
 import com.order.serviceorder.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
@@ -81,6 +85,32 @@ public class OrderService {
                 responseDtos.add(responseDto);
             }
             return responseDtos;
+        } catch (Exception e) {
+            throw new DishFailedResponseController(e.getMessage());
+        }
+    }
+
+    public Page<OrderResponseDto> getAllOrdersStateCampus(String state, Long campus, int page) {
+        try {
+            List<OrderEntity> orderEntities = orderRepository.findByStateAndCampus(state, campus);
+            List<OrderResponseDto> responseDtos = new ArrayList<>();
+            for ( OrderEntity order : orderEntities ) {
+                OrderResponseDto responseDto = new OrderResponseDto();
+                responseDto.setState(order.getState());
+                responseDto.setUser(userMapper.entityToRequest(order.getUserOrder()));
+                String[] dishes = order.getDishes().split(" ");
+                List<DishResponseDto> dishEntities = new ArrayList<>();
+                for (int i = 0; i < dishes.length; i += 2) {
+                    DishEntity entity = restTemplate.getForObject("http://localhost:8081/serviceDishes/dishes/get/" + dishes[i], DishEntity.class);
+                    DishResponseDto dish = dishMapper.entityToResponse(entity);
+                    if (i == 0) responseDto.setCampus(entity.getCampus());
+                    dish.setQuantity(Integer.parseInt(dishes[i + 1]));
+                    dishEntities.add(dish);
+                }
+                responseDto.setDishes(dishEntities);
+                responseDtos.add(responseDto);
+            }
+            return new PageImpl<>(responseDtos, PageRequest.of(page, 10), responseDtos.size());
         } catch (Exception e) {
             throw new DishFailedResponseController(e.getMessage());
         }

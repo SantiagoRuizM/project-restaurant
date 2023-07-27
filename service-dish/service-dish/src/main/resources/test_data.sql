@@ -1,7 +1,7 @@
 use serviceDishes
 
 select * from category_entity
-insert into category_entity (name) values ('Frutas y verduras'),('Cereales integrales'),('Carne y legumbres'),('Leche y productos lácteos'),('Grasas y aceites')
+insert into category_entity (name) values ('Comida de mar'),('Comida típica'),('Comida rápida'),('Comida de temporada'),('Fritos')
 
 select * from campus_entity
 insert into campus_entity (name) values ('Medellín'),('Sabaneta'),('Bello'),('Sabaneta'),('Envigado')
