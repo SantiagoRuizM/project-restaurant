@@ -4,15 +4,15 @@ import com.order.serviceorder.dtos.dish.DishForOrderDto;
 import com.order.serviceorder.dtos.dish.DishResponseDto;
 import com.order.serviceorder.dtos.order.OrderRequestDto;
 import com.order.serviceorder.dtos.order.OrderResponseDto;
+import com.order.serviceorder.entities.UserEntity;
+import com.order.serviceorder.exceptions.*;
 import com.order.serviceorder.externals.DishEntity;
 import com.order.serviceorder.entities.OrderEntity;
-import com.order.serviceorder.exceptions.DishFailedResponseController;
-import com.order.serviceorder.exceptions.InactiveDishException;
-import com.order.serviceorder.exceptions.IncorrectDishCampusException;
 import com.order.serviceorder.mappers.DishMapper;
 import com.order.serviceorder.mappers.OrderMapper;
 import com.order.serviceorder.mappers.UserMapper;
 import com.order.serviceorder.repositories.OrderRepository;
+import com.order.serviceorder.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -23,7 +23,9 @@ import java.util.List;
 public class OrderService {
 
     @Autowired
-    private OrderRepository repository;
+    private OrderRepository orderRepository;
+    @Autowired
+    private UserRepository userRepository;
     @Autowired
     private OrderMapper orderMapper;
     @Autowired
@@ -34,6 +36,10 @@ public class OrderService {
     private RestTemplate restTemplate;
 
     public void createOrder(OrderRequestDto dto) {
+        if (userRepository.existsById(dto.getUser())) {
+            UserEntity user = userRepository.findById(dto.getUser()).get();
+            if (user.isOrderActive()) throw new OrderInProcessException("The user with id " + dto.getUser() + ": already have an order in process");
+        } else throw new RecordNotFoundException("The user with id " + dto.getUser() + ": was not found");
         OrderEntity order = orderMapper.requestToOrder(dto);
         String dishes = "";
         for ( DishForOrderDto value : dto.getDish() ) {
@@ -48,12 +54,15 @@ public class OrderService {
             if (entity.getCampus().getId() != dto.getCampus()) throw new IncorrectDishCampusException("The dish with id " + value.getIdDish() + ": is not valid in your campus");
         }
         order.setDishes(dishes);
-        repository.save(order);
+        orderRepository.save(order);
+        UserEntity user = userRepository.findById(dto.getUser()).get();
+        user.setOrderActive(!user.isOrderActive());
+        userRepository.save(user);
     }
 
     public List<OrderResponseDto> getAllOrders() {
         try {
-            List<OrderEntity> orderEntities = repository.findAll();
+            List<OrderEntity> orderEntities = orderRepository.findAll();
             List<OrderResponseDto> responseDtos = new ArrayList<>();
             for ( OrderEntity order : orderEntities ) {
                 OrderResponseDto responseDto = new OrderResponseDto();
