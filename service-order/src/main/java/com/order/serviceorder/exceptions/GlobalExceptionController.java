@@ -24,4 +24,14 @@ public class GlobalExceptionController {
     public ResponseEntity<ResponseErrorDto> handlerIncorrectDishCampusException(IncorrectDishCampusException incorrectDishCampusException) {
         return new ResponseEntity<>(new ResponseErrorDto(incorrectDishCampusException.getMessage(), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(OrderInProcessException.class)
+    public ResponseEntity<ResponseErrorDto> handlerOrderInProcessException(OrderInProcessException orderInProcessException) {
+        return new ResponseEntity<>(new ResponseErrorDto(orderInProcessException.getMessage(), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(RecordNotFoundException.class)
+    public ResponseEntity<ResponseErrorDto> handlerRecordNotFoundException(RecordNotFoundException recordNotFoundException) {
+        return new ResponseEntity<>(new ResponseErrorDto(recordNotFoundException.getMessage(), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+    }
 }
