@@ -20,11 +20,6 @@
         <module name="service-dish" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="server-eureka" target="19" />
-      <module name="service-dish" target="19" />
-      <module name="service-order" target="19" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
