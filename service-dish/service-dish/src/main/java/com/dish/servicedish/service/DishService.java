@@ -12,6 +12,9 @@ import com.dish.servicedish.mapper.DishMapper;
 import com.dish.servicedish.repository.DishRepository;
 import com.dish.servicedish.validations.DishValidations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -48,8 +51,9 @@ public class DishService extends DishValidations {
     }
 
     @Transactional(readOnly = true)
-    public List<DishResponseDto> getAllDishesCategoryCampus(Long category, Long campus) {
-        return mapper.entitiesToResponses(repository.findByCategoryIdOrCampusId(category, campus));
+    public Page<DishResponseDto> getAllDishesCategoryCampus(Long category, Long campus, int page) {
+        List<DishResponseDto> dishResponseDtoList = mapper.entitiesToResponses(repository.findByCategoryIdOrCampusId(category, campus));
+        return new PageImpl<>(dishResponseDtoList, PageRequest.of(page, 10), dishResponseDtoList.size());
     }
 
     @Transactional(readOnly = true)
