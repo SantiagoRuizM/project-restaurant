@@ -1,8 +1,8 @@
 package com.dish.servicedish.controller;
 
-import com.dish.servicedish.dtos.DishRequestDto;
-import com.dish.servicedish.dtos.DishResponseDto;
-import com.dish.servicedish.dtos.DishUpdateRequestDto;
+import com.dish.servicedish.dtos.dish.DishRequestDto;
+import com.dish.servicedish.dtos.dish.DishResponseDto;
+import com.dish.servicedish.dtos.dish.DishUpdateRequestDto;
 import com.dish.servicedish.dtos.PageGeneric;
 import com.dish.servicedish.mapper.DishMapper;
 import com.dish.servicedish.service.DishService;

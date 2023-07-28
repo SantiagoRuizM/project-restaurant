@@ -1,8 +1,8 @@
 package com.dish.servicedish.service;
 
-import com.dish.servicedish.dtos.DishRequestDto;
-import com.dish.servicedish.dtos.DishResponseDto;
-import com.dish.servicedish.dtos.DishUpdateRequestDto;
+import com.dish.servicedish.dtos.dish.DishRequestDto;
+import com.dish.servicedish.dtos.dish.DishResponseDto;
+import com.dish.servicedish.dtos.dish.DishUpdateRequestDto;
 import com.dish.servicedish.dtos.PageGeneric;
 import com.dish.servicedish.entity.CampusEntity;
 import com.dish.servicedish.entity.DishEntity;

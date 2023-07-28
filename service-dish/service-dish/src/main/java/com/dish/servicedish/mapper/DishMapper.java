@@ -1,7 +1,7 @@
 package com.dish.servicedish.mapper;
 
-import com.dish.servicedish.dtos.DishRequestDto;
-import com.dish.servicedish.dtos.DishResponseDto;
+import com.dish.servicedish.dtos.dish.DishRequestDto;
+import com.dish.servicedish.dtos.dish.DishResponseDto;
 import com.dish.servicedish.entity.DishEntity;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;

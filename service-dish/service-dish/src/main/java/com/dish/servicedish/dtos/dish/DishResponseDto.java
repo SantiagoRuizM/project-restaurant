@@ -1,4 +1,4 @@
-package com.dish.servicedish.dtos;
+package com.dish.servicedish.dtos.dish;
 
 import com.dish.servicedish.entity.CampusEntity;
 import com.dish.servicedish.entity.CategoryEntity;
