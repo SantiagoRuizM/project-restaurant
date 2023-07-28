@@ -1,4 +1,4 @@
-package com.dish.servicedish.dtos;
+package com.dish.servicedish.dtos.dish;
 
 public class DishUpdateRequestDto {
 

@@ -1,4 +1,4 @@
-package com.dish.servicedish.dtos;
+package com.dish.servicedish.dtos.dish;
 
 public class DishRequestDto {
 
@@ -8,19 +8,17 @@ public class DishRequestDto {
     private String urlImage;
     private Long category;
     private Long campus;
-    private char role;
 
     public DishRequestDto() {
     }
 
-    public DishRequestDto(String name, Long price, String description, String urlImage, Long category, Long campus, char role) {
+    public DishRequestDto(String name, Long price, String description, String urlImage, Long category, Long campus) {
         this.name = name;
         this.price = price;
         this.description = description;
         this.urlImage = urlImage;
         this.category = category;
         this.campus = campus;
-        this.role = role;
     }
 
     public String getName() {
@@ -69,13 +67,5 @@ public class DishRequestDto {
 
     public void setCampus(Long campus) {
         this.campus = campus;
-    }
-
-    public char getRole() {
-        return role;
-    }
-
-    public void setRole(char role) {
-        this.role = role;
     }
 }

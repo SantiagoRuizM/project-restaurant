@@ -1,9 +1,9 @@
 package com.order.serviceorder.dtos.order;
 
 import com.order.serviceorder.dtos.dish.DishResponseDto;
+import com.order.serviceorder.dtos.employee.EmployeeRequestDto;
 import com.order.serviceorder.dtos.user.UserRequestDto;
 import com.order.serviceorder.externals.CampusEntity;
-
 import java.util.List;
 
 public class OrderResponseDto {
@@ -12,15 +12,15 @@ public class OrderResponseDto {
     private CampusEntity campus;
     private String state;
     private UserRequestDto user;
+    private EmployeeRequestDto employee;
 
     public OrderResponseDto() {
     }
 
-    public OrderResponseDto(List<DishResponseDto> dishes, CampusEntity campus, String state, UserRequestDto user) {
-        this.dishes = dishes;
-        this.campus = campus;
+    public OrderResponseDto(String state, UserRequestDto user, EmployeeRequestDto employee) {
         this.state = state;
         this.user = user;
+        this.employee = employee;
     }
 
     public List<DishResponseDto> getDishes() {
@@ -53,5 +53,13 @@ public class OrderResponseDto {
 
     public void setUser(UserRequestDto user) {
         this.user = user;
+    }
+
+    public EmployeeRequestDto getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(EmployeeRequestDto employee) {
+        this.employee = employee;
     }
 }

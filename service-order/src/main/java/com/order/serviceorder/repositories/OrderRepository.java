@@ -10,4 +10,6 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
 
     List<OrderEntity> findByStateAndCampus(String state, Long campus);
+
+    List<OrderEntity> findByState(String state);
 }

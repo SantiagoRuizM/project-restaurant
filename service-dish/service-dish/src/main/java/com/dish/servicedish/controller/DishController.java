@@ -1,12 +1,12 @@
 package com.dish.servicedish.controller;
 
-import com.dish.servicedish.dtos.DishRequestDto;
-import com.dish.servicedish.dtos.DishResponseDto;
-import com.dish.servicedish.dtos.DishUpdateRequestDto;
+import com.dish.servicedish.dtos.dish.DishRequestDto;
+import com.dish.servicedish.dtos.dish.DishResponseDto;
+import com.dish.servicedish.dtos.dish.DishUpdateRequestDto;
+import com.dish.servicedish.dtos.PageGeneric;
 import com.dish.servicedish.mapper.DishMapper;
 import com.dish.servicedish.service.DishService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,8 +42,8 @@ public class DishController {
     }
 
     @GetMapping("/getAll/{category}/{campus}")
-    public ResponseEntity<List<DishResponseDto>> getAllDishesCategoryCampus(@PathVariable Long category, @PathVariable Long campus, @RequestParam int page) {
-        return new ResponseEntity<>(service.getAllDishesCategoryCampus(category, campus, page).getContent(), HttpStatus.OK);
+    public ResponseEntity<PageGeneric<List<DishResponseDto>>> getAllDishesCategoryCampus(@PathVariable Long category, @PathVariable Long campus, @RequestParam(value = "1")  int page) {
+        return new ResponseEntity<>(service.getAllDishesCategoryCampus(category, campus, page - 1), HttpStatus.OK);
     }
 
     @GetMapping("/getAll/actives")

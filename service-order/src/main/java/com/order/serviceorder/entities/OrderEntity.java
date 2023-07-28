@@ -20,16 +20,21 @@ public class OrderEntity {
     @JoinColumn(name = "user_order_id", nullable = false)
     @JsonBackReference
     private UserEntity userOrder;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_order_id")
+    @JsonBackReference
+    private EmployeeEntity employeeOrder = null;
 
     public OrderEntity() {
     }
 
-    public OrderEntity(Long id, String dishes, Long campus, String state, UserEntity userOrder) {
+    public OrderEntity(Long id, String dishes, Long campus, String state, UserEntity userOrder, EmployeeEntity employeeOrder) {
         this.id = id;
         this.dishes = dishes;
         this.campus = campus;
         this.state = state;
         this.userOrder = userOrder;
+        this.employeeOrder = employeeOrder;
     }
 
     public Long getId() {
@@ -70,5 +75,13 @@ public class OrderEntity {
 
     public void setUserOrder(UserEntity userOrder) {
         this.userOrder = userOrder;
+    }
+
+    public EmployeeEntity getEmployeeOrder() {
+        return employeeOrder;
+    }
+
+    public void setEmployeeOrder(EmployeeEntity employeeOrder) {
+        this.employeeOrder = employeeOrder;
     }
 }
