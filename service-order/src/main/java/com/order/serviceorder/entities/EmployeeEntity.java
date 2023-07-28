@@ -7,9 +7,9 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
-@Entity(name = "user_entity")
+@Entity(name = "employee_entity")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
-public class UserEntity {
+public class EmployeeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,20 +17,18 @@ public class UserEntity {
     private Long id;
     @Column(name = "name", nullable = false)
     private String name;
-    @Column(name = "order_active", nullable = false)
-    private boolean orderActive = false;
-    @OneToMany(mappedBy = "userOrder")
+    @OneToMany(mappedBy = "employeeOrder")
     @JsonManagedReference
     @JsonIgnore
     private List<OrderEntity> orderEntities;
 
-    public UserEntity() {
+    public EmployeeEntity() {
     }
 
-    public UserEntity(Long id, String name, boolean orderActive) {
+    public EmployeeEntity(Long id, String name, List<OrderEntity> orderEntities) {
         this.id = id;
         this.name = name;
-        this.orderActive = orderActive;
+        this.orderEntities = orderEntities;
     }
 
     public Long getId() {
@@ -49,11 +47,11 @@ public class UserEntity {
         this.name = name;
     }
 
-    public boolean isOrderActive() {
-        return orderActive;
+    public List<OrderEntity> getOrderEntities() {
+        return orderEntities;
     }
 
-    public void setOrderActive(boolean orderActive) {
-        this.orderActive = orderActive;
+    public void setOrderEntities(List<OrderEntity> orderEntities) {
+        this.orderEntities = orderEntities;
     }
 }
