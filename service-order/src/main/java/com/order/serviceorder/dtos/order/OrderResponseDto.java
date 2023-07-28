@@ -16,9 +16,7 @@ public class OrderResponseDto {
     public OrderResponseDto() {
     }
 
-    public OrderResponseDto(List<DishResponseDto> dishes, CampusEntity campus, String state, UserRequestDto user) {
-        this.dishes = dishes;
-        this.campus = campus;
+    public OrderResponseDto(String state, UserRequestDto user) {
         this.state = state;
         this.user = user;
     }

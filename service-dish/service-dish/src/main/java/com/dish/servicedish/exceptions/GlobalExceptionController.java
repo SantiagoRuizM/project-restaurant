@@ -23,4 +23,9 @@ public class GlobalExceptionController {
     public ResponseEntity<ResponseErrorDto> handlerPriceNegativeException(PriceNegativeException priceNegativeException) {
         return new ResponseEntity<>(new ResponseErrorDto(priceNegativeException.getMessage(), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(InvalidPageException.class)
+    public ResponseEntity<ResponseErrorDto> handlerInvalidPageException(InvalidPageException invalidPageException) {
+        return new ResponseEntity<>(new ResponseErrorDto(invalidPageException.getMessage(), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+    }
 }

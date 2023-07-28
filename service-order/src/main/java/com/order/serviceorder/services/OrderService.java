@@ -14,17 +14,19 @@ import com.order.serviceorder.mappers.OrderMapper;
 import com.order.serviceorder.mappers.UserMapper;
 import com.order.serviceorder.repositories.OrderRepository;
 import com.order.serviceorder.repositories.UserRepository;
+import com.order.serviceorder.validations.OrderValidations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class OrderService {
+public class OrderService extends OrderValidations {
 
     @Autowired
     private OrderRepository orderRepository;
@@ -40,10 +42,9 @@ public class OrderService {
     private RestTemplate restTemplate;
 
     public void createOrder(OrderRequestDto dto) {
-        if (userRepository.existsById(dto.getUser())) {
-            UserEntity user = userRepository.findById(dto.getUser()).get();
-            if (user.isOrderActive()) throw new OrderInProcessException("The user with id " + dto.getUser() + ": already have an order in process");
-        } else throw new RecordNotFoundException("The user with id " + dto.getUser() + ": was not found");
+        validateUserExists(!userRepository.existsById(dto.getUser()), dto.getUser());
+        UserEntity user = userRepository.findById(dto.getUser()).get();
+        validateUserOrderActive(user.isOrderActive(), dto.getUser());
         OrderEntity order = orderMapper.requestToOrder(dto);
         String dishes = "";
         for ( DishForOrderDto value : dto.getDish() ) {
@@ -53,25 +54,22 @@ public class OrderService {
             } catch (Exception e) {
                 throw new DishFailedResponseController(e.getMessage());
             }
-            if (entity.isActive()) dishes += value.getIdDish() + " " + value.getQuantity() + " ";
-            else throw new InactiveDishException("The dish with id " + value.getIdDish() + ": is not active");
-            if (entity.getCampus().getId() != dto.getCampus()) throw new IncorrectDishCampusException("The dish with id " + value.getIdDish() + ": is not valid in your campus");
+            validateDishActive(!entity.isActive(), value.getIdDish());
+            validateDishCampus(entity.getCampus().getId(), dto.getCampus(), value.getIdDish());
+            dishes += value.getIdDish() + " " + value.getQuantity() + " ";
         }
         order.setDishes(dishes);
         orderRepository.save(order);
-        UserEntity user = userRepository.findById(dto.getUser()).get();
         user.setOrderActive(!user.isOrderActive());
         userRepository.save(user);
     }
 
-    public List<OrderResponseDto> getAllOrders() {
+    @Transactional(readOnly = true)
+    public List<OrderResponseDto> getAllOrdersGeneric(List<OrderEntity> orderEntities) {
         try {
-            List<OrderEntity> orderEntities = orderRepository.findAll();
-            List<OrderResponseDto> responseDtos = new ArrayList<>();
+            List<OrderResponseDto> responsesDto = new ArrayList<>();
             for ( OrderEntity order : orderEntities ) {
-                OrderResponseDto responseDto = new OrderResponseDto();
-                responseDto.setState(order.getState());
-                responseDto.setUser(userMapper.entityToRequest(order.getUserOrder()));
+                OrderResponseDto responseDto = new OrderResponseDto(order.getState(), userMapper.entityToRequest(order.getUserOrder()));
                 String[] dishes = order.getDishes().split(" ");
                 List<DishResponseDto> dishEntities = new ArrayList<>();
                 for (int i = 0; i < dishes.length; i += 2) {
@@ -82,36 +80,43 @@ public class OrderService {
                     dishEntities.add(dish);
                 }
                 responseDto.setDishes(dishEntities);
-                responseDtos.add(responseDto);
+                responsesDto.add(responseDto);
             }
-            return responseDtos;
+            return responsesDto;
         } catch (Exception e) {
             throw new DishFailedResponseController(e.getMessage());
         }
     }
 
+    @Transactional(readOnly = true)
+    public List<OrderResponseDto> getAllOrders() {
+        try {
+            return getAllOrdersGeneric(orderRepository.findAll());
+        } catch (Exception e) {
+            throw new DishFailedResponseController(e.getMessage());
+        }
+    }
+
+    @Transactional(readOnly = true)
     public PageGeneric<List<OrderResponseDto>> getAllOrdersStateCampus(String state, Long campus, int page) {
         try {
-            List<OrderEntity> orderEntities = orderRepository.findByStateAndCampus(state, campus);
-            List<OrderResponseDto> responseDtos = new ArrayList<>();
-            for ( OrderEntity order : orderEntities ) {
-                OrderResponseDto responseDto = new OrderResponseDto();
-                responseDto.setState(order.getState());
-                responseDto.setUser(userMapper.entityToRequest(order.getUserOrder()));
-                String[] dishes = order.getDishes().split(" ");
-                List<DishResponseDto> dishEntities = new ArrayList<>();
-                for (int i = 0; i < dishes.length; i += 2) {
-                    DishEntity entity = restTemplate.getForObject("http://localhost:8081/serviceDishes/dishes/get/" + dishes[i], DishEntity.class);
-                    DishResponseDto dish = dishMapper.entityToResponse(entity);
-                    if (i == 0) responseDto.setCampus(entity.getCampus());
-                    dish.setQuantity(Integer.parseInt(dishes[i + 1]));
-                    dishEntities.add(dish);
-                }
-                responseDto.setDishes(dishEntities);
-                responseDtos.add(responseDto);
-            }
-            List<OrderResponseDto> responseDto = responseDtos.subList(page * 10, Math.min(page * 10 + 10, responseDtos.size()));
-            Page<OrderResponseDto> info = new PageImpl<>(responseDtos, PageRequest.of(page, 10), responseDtos.size());
+            List<OrderResponseDto> ordersResponsesDto = getAllOrdersGeneric(orderRepository.findByStateAndCampus(state, campus));
+            validatePage(page, ordersResponsesDto.size());
+            List<OrderResponseDto> responseDto = ordersResponsesDto.subList(page * 10, Math.min(page * 10 + 10, ordersResponsesDto.size()));
+            Page<OrderResponseDto> info = new PageImpl<>(ordersResponsesDto, PageRequest.of(page, 10), ordersResponsesDto.size());
+            return new PageGeneric<>(info.getTotalPages(), page + 1, responseDto.size(), info.getContent());
+        } catch (Exception e) {
+            throw new DishFailedResponseController(e.getMessage());
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public PageGeneric<List<OrderResponseDto>> getAllOrdersState(String state, int page) {
+        try {
+            List<OrderResponseDto> ordersResponsesDto = getAllOrdersGeneric(orderRepository.findByState(state));
+            validatePage(page, ordersResponsesDto.size());
+            List<OrderResponseDto> responseDto = ordersResponsesDto.subList(page * 10, Math.min(page * 10 + 10, ordersResponsesDto.size()));
+            Page<OrderResponseDto> info = new PageImpl<>(ordersResponsesDto, PageRequest.of(page, 10), ordersResponsesDto.size());
             return new PageGeneric<>(info.getTotalPages(), page + 1, responseDto.size(), info.getContent());
         } catch (Exception e) {
             throw new DishFailedResponseController(e.getMessage());

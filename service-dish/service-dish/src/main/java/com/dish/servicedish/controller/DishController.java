@@ -42,7 +42,7 @@ public class DishController {
     }
 
     @GetMapping("/getAll/{category}/{campus}")
-    public ResponseEntity<PageGeneric<List<DishResponseDto>>> getAllDishesCategoryCampus(@PathVariable Long category, @PathVariable Long campus, @RequestParam int page) {
+    public ResponseEntity<PageGeneric<List<DishResponseDto>>> getAllDishesCategoryCampus(@PathVariable Long category, @PathVariable Long campus, @RequestParam(value = "1")  int page) {
         return new ResponseEntity<>(service.getAllDishesCategoryCampus(category, campus, page - 1), HttpStatus.OK);
     }
 

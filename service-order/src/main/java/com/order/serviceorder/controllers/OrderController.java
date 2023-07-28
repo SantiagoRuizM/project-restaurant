@@ -28,8 +28,13 @@ public class OrderController {
     }
 
     @GetMapping("/getAll/{state}/{campus}")
-    public ResponseEntity<PageGeneric<List<OrderResponseDto>>> getAllOrders(@PathVariable String state, @PathVariable Long campus, @RequestParam int page) {
+    public ResponseEntity<PageGeneric<List<OrderResponseDto>>> getAllOrdersStateCampus(@PathVariable String state, @PathVariable Long campus, @RequestParam(value = "1")  int page) {
         return new ResponseEntity<>(service.getAllOrdersStateCampus(state, campus, page - 1), HttpStatus.OK);
+    }
+
+    @GetMapping("/getAll/{state}")
+    public ResponseEntity<PageGeneric<List<OrderResponseDto>>> getAllOrdersState(@PathVariable String state, @RequestParam(value = "1") int page) {
+        return new ResponseEntity<>(service.getAllOrdersState(state, page - 1), HttpStatus.OK);
     }
 
     @GetMapping("/getAll")
