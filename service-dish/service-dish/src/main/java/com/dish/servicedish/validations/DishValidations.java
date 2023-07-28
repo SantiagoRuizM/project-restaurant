@@ -4,15 +4,10 @@ import com.dish.servicedish.entity.DishEntity;
 import com.dish.servicedish.exceptions.InvalidPageException;
 import com.dish.servicedish.exceptions.PriceNegativeException;
 import com.dish.servicedish.exceptions.RecordNotFoundException;
-import com.dish.servicedish.exceptions.WrongRoleException;
 
 import java.util.Optional;
 
 public class DishValidations {
-
-    public static void validateRole(char role) {
-        if (role != '1') throw new WrongRoleException("The role to create dish is not allowed");
-    }
 
     public static void validatePriceNegative(Long price) {
         if (price <= 0) throw new PriceNegativeException("The price must be positive");

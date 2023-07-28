@@ -28,7 +28,6 @@ public class DishService extends DishValidations {
     private DishMapper mapper;
 
     public void createDish(DishRequestDto dish) {
-        validateRole(dish.getRole());
         validatePriceNegative(dish.getPrice());
         repository.save(mapper.requestToEntity(dish));
     }
