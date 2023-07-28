@@ -1,14 +1,13 @@
 package com.order.serviceorder.controllers;
 
+import com.order.serviceorder.dtos.PageGeneric;
 import com.order.serviceorder.dtos.order.OrderRequestDto;
 import com.order.serviceorder.dtos.order.OrderResponseDto;
 import com.order.serviceorder.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,8 +28,8 @@ public class OrderController {
     }
 
     @GetMapping("/getAll/{state}/{campus}")
-    public ResponseEntity<Page<OrderResponseDto>> getAllOrders(@PathVariable String state, @PathVariable Long campus, @RequestParam int page) {
-        return new ResponseEntity<>(service.getAllOrdersStateCampus(state, campus, page), HttpStatus.OK);
+    public ResponseEntity<PageGeneric<List<OrderResponseDto>>> getAllOrders(@PathVariable String state, @PathVariable Long campus, @RequestParam int page) {
+        return new ResponseEntity<>(service.getAllOrdersStateCampus(state, campus, page - 1), HttpStatus.OK);
     }
 
     @GetMapping("/getAll")

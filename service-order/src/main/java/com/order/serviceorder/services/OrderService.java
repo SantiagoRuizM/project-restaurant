@@ -1,5 +1,6 @@
 package com.order.serviceorder.services;
 
+import com.order.serviceorder.dtos.PageGeneric;
 import com.order.serviceorder.dtos.dish.DishForOrderDto;
 import com.order.serviceorder.dtos.dish.DishResponseDto;
 import com.order.serviceorder.dtos.order.OrderRequestDto;
@@ -17,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
@@ -90,7 +90,7 @@ public class OrderService {
         }
     }
 
-    public Page<OrderResponseDto> getAllOrdersStateCampus(String state, Long campus, int page) {
+    public PageGeneric<List<OrderResponseDto>> getAllOrdersStateCampus(String state, Long campus, int page) {
         try {
             List<OrderEntity> orderEntities = orderRepository.findByStateAndCampus(state, campus);
             List<OrderResponseDto> responseDtos = new ArrayList<>();
@@ -110,7 +110,9 @@ public class OrderService {
                 responseDto.setDishes(dishEntities);
                 responseDtos.add(responseDto);
             }
-            return new PageImpl<>(responseDtos, PageRequest.of(page, 10), responseDtos.size());
+            List<OrderResponseDto> responseDto = responseDtos.subList(page * 10, Math.min(page * 10 + 10, responseDtos.size()));
+            Page<OrderResponseDto> info = new PageImpl<>(responseDtos, PageRequest.of(page, 10), responseDtos.size());
+            return new PageGeneric<>(info.getTotalPages(), page + 1, responseDto.size(), info.getContent());
         } catch (Exception e) {
             throw new DishFailedResponseController(e.getMessage());
         }

@@ -3,6 +3,7 @@ package com.dish.servicedish.service;
 import com.dish.servicedish.dtos.DishRequestDto;
 import com.dish.servicedish.dtos.DishResponseDto;
 import com.dish.servicedish.dtos.DishUpdateRequestDto;
+import com.dish.servicedish.dtos.PageGeneric;
 import com.dish.servicedish.entity.CampusEntity;
 import com.dish.servicedish.entity.DishEntity;
 import com.dish.servicedish.exceptions.PriceNegativeException;
@@ -51,9 +52,11 @@ public class DishService extends DishValidations {
     }
 
     @Transactional(readOnly = true)
-    public Page<DishResponseDto> getAllDishesCategoryCampus(Long category, Long campus, int page) {
+    public PageGeneric<List<DishResponseDto>> getAllDishesCategoryCampus(Long category, Long campus, int page) {
         List<DishResponseDto> dishResponseDtoList = mapper.entitiesToResponses(repository.findByCategoryIdOrCampusId(category, campus));
-        return new PageImpl<>(dishResponseDtoList, PageRequest.of(page, 10), dishResponseDtoList.size());
+        List<DishResponseDto> responseDto = dishResponseDtoList.subList(page * 10, Math.min(page * 10 + 10, dishResponseDtoList.size()));
+        Page<DishResponseDto> info = new PageImpl<>(responseDto, PageRequest.of(page, 10), dishResponseDtoList.size());
+        return new PageGeneric<>(info.getTotalPages(), page + 1, responseDto.size(), info.getContent());
     }
 
     @Transactional(readOnly = true)
