@@ -5,11 +5,13 @@ import com.order.serviceorder.dtos.dish.DishForOrderDto;
 import com.order.serviceorder.dtos.dish.DishResponseDto;
 import com.order.serviceorder.dtos.order.OrderRequestDto;
 import com.order.serviceorder.dtos.order.OrderResponseDto;
+import com.order.serviceorder.entities.EmployeeEntity;
 import com.order.serviceorder.entities.UserEntity;
 import com.order.serviceorder.exceptions.*;
 import com.order.serviceorder.externals.DishEntity;
 import com.order.serviceorder.entities.OrderEntity;
 import com.order.serviceorder.mappers.DishMapper;
+import com.order.serviceorder.mappers.EmployeeMapper;
 import com.order.serviceorder.mappers.OrderMapper;
 import com.order.serviceorder.mappers.UserMapper;
 import com.order.serviceorder.repositories.OrderRepository;
@@ -24,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderService extends OrderValidations {
@@ -38,6 +41,8 @@ public class OrderService extends OrderValidations {
     private DishMapper dishMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private EmployeeMapper employeeMapper;
     @Autowired
     private RestTemplate restTemplate;
 
@@ -69,7 +74,7 @@ public class OrderService extends OrderValidations {
         try {
             List<OrderResponseDto> responsesDto = new ArrayList<>();
             for ( OrderEntity order : orderEntities ) {
-                OrderResponseDto responseDto = new OrderResponseDto(order.getState(), userMapper.entityToRequest(order.getUserOrder()));
+                OrderResponseDto responseDto = new OrderResponseDto(order.getState(), userMapper.entityToRequest(order.getUserOrder()), employeeMapper.entityToRequest(order.getEmployeeOrder()));
                 String[] dishes = order.getDishes().split(" ");
                 List<DishResponseDto> dishEntities = new ArrayList<>();
                 for (int i = 0; i < dishes.length; i += 2) {
@@ -121,5 +126,14 @@ public class OrderService extends OrderValidations {
         } catch (Exception e) {
             throw new DishFailedResponseController(e.getMessage());
         }
+    }
+
+    public void updateOrderEmployeeState(Long id, Long employee) {
+        Optional<OrderEntity> request = orderRepository.findById(id);
+        validateOrderPresent(request, id);
+        OrderEntity data = request.get();
+        data.setState("En preparación");
+        data.setEmployeeOrder(new EmployeeEntity(employee));
+        orderRepository.save(data);
     }
 }

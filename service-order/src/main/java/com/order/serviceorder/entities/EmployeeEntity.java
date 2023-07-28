@@ -25,10 +25,8 @@ public class EmployeeEntity {
     public EmployeeEntity() {
     }
 
-    public EmployeeEntity(Long id, String name, List<OrderEntity> orderEntities) {
+    public EmployeeEntity(Long id) {
         this.id = id;
-        this.name = name;
-        this.orderEntities = orderEntities;
     }
 
     public Long getId() {

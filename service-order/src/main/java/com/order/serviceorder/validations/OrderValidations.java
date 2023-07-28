@@ -1,6 +1,9 @@
 package com.order.serviceorder.validations;
 
+import com.order.serviceorder.entities.OrderEntity;
 import com.order.serviceorder.exceptions.*;
+
+import java.util.Optional;
 
 public class OrderValidations {
 
@@ -22,5 +25,9 @@ public class OrderValidations {
 
     public static void validatePage(int page, int size) {
         if (page * 10 > size) throw new InvalidPageException("The page " + (page + 1) + ": does not exist");
+    }
+
+    public static void validateOrderPresent(Optional<OrderEntity> order, Long id) {
+        if (order.isEmpty()) throw new RecordNotFoundException("The order with id " + id + ": was not found");
     }
 }

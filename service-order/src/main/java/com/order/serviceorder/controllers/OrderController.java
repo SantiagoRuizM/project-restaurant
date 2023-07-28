@@ -41,4 +41,12 @@ public class OrderController {
     public ResponseEntity<List<OrderResponseDto>> getAllOrders() {
         return new ResponseEntity<>(service.getAllOrders(), HttpStatus.OK);
     }
+
+    @PutMapping("/update/stateOrder/{id}/{employee}")
+    public ResponseEntity<Map<String, String>> updateOrderEmployeeState(@PathVariable Long id, @PathVariable Long employee) {
+        service.updateOrderEmployeeState(id, employee);
+        Map<String, String> map = new HashMap<>();
+        map.put("message", "Updated success!");
+        return new ResponseEntity<>(map, HttpStatus.ACCEPTED);
+    }
 }

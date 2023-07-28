@@ -1,8 +1,6 @@
 package com.order.serviceorder.dtos.order;
 
 import com.order.serviceorder.dtos.dish.DishForOrderDto;
-import com.order.serviceorder.dtos.user.UserRequestDto;
-import com.order.serviceorder.entities.UserEntity;
 
 import java.util.List;
 
