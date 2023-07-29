@@ -44,9 +44,16 @@ public class OrderController {
 
     @PutMapping("/update/stateOrder/{id}/{employee}")
     public ResponseEntity<Map<String, String>> updateOrderEmployeeState(@PathVariable Long id, @PathVariable Long employee) {
-        service.updateOrderEmployeeState(id, employee);
         Map<String, String> map = new HashMap<>();
-        map.put("message", "Updated success!");
-        return new ResponseEntity<>(map, HttpStatus.ACCEPTED);
+        String[] state = service.updateOrderEmployeeState(id, employee);
+        switch (state[0]) {
+            case "Listo":
+                map.put("message", "Updated success!");
+                map.put("message to user: ", "Dear user, we inform you that your order is ready and can be claimed with the code: " + state[1]);
+                return new ResponseEntity<>(map, HttpStatus.ACCEPTED);
+            default:
+                map.put("message", "Updated success!");
+                return new ResponseEntity<>(map, HttpStatus.ACCEPTED);
+        }
     }
 }

@@ -24,17 +24,20 @@ public class OrderEntity {
     @JoinColumn(name = "employee_order_id")
     @JsonBackReference
     private EmployeeEntity employeeOrder = null;
+    @Column(name = "delivery_id")
+    private String deliveryId = null;
 
     public OrderEntity() {
     }
 
-    public OrderEntity(Long id, String dishes, Long campus, String state, UserEntity userOrder, EmployeeEntity employeeOrder) {
+    public OrderEntity(Long id, String dishes, Long campus, String state, UserEntity userOrder, EmployeeEntity employeeOrder, String deliveryId) {
         this.id = id;
         this.dishes = dishes;
         this.campus = campus;
         this.state = state;
         this.userOrder = userOrder;
         this.employeeOrder = employeeOrder;
+        this.deliveryId = deliveryId;
     }
 
     public Long getId() {
@@ -83,5 +86,13 @@ public class OrderEntity {
 
     public void setEmployeeOrder(EmployeeEntity employeeOrder) {
         this.employeeOrder = employeeOrder;
+    }
+
+    public String getDeliveryId() {
+        return deliveryId;
+    }
+
+    public void setDeliveryId(String deliveryId) {
+        this.deliveryId = deliveryId;
     }
 }

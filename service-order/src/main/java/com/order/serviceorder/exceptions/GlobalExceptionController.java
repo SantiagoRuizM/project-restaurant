@@ -34,4 +34,9 @@ public class GlobalExceptionController {
     public ResponseEntity<ResponseErrorDto> handlerRecordNotFoundException(RecordNotFoundException recordNotFoundException) {
         return new ResponseEntity<>(new ResponseErrorDto(recordNotFoundException.getMessage(), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(StateDeliveryException.class)
+    public ResponseEntity<ResponseErrorDto> handlerStateDeliveryException(StateDeliveryException stateDeliveryException) {
+        return new ResponseEntity<>(new ResponseErrorDto(stateDeliveryException.getMessage(), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+    }
 }

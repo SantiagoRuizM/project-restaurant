@@ -30,4 +30,8 @@ public class OrderValidations {
     public static void validateOrderPresent(Optional<OrderEntity> order, Long id) {
         if (order.isEmpty()) throw new RecordNotFoundException("The order with id " + id + ": was not found");
     }
+
+    public static void validateStateFinish(String state, Long id) {
+        if (state.equals("Entregado")) throw new StateDeliveryException("The order with id " + id + ": has already been delivered");
+    }
 }
