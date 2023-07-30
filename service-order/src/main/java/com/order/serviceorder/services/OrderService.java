@@ -6,6 +6,7 @@ import com.order.serviceorder.dtos.dish.DishResponseDto;
 import com.order.serviceorder.dtos.order.OrderRequestDto;
 import com.order.serviceorder.dtos.order.OrderResponseDto;
 import com.order.serviceorder.entities.EmployeeEntity;
+import com.order.serviceorder.entities.OrderDishDetailsEntity;
 import com.order.serviceorder.entities.UserEntity;
 import com.order.serviceorder.exceptions.*;
 import com.order.serviceorder.externals.DishEntity;
@@ -14,6 +15,7 @@ import com.order.serviceorder.mappers.DishMapper;
 import com.order.serviceorder.mappers.EmployeeMapper;
 import com.order.serviceorder.mappers.OrderMapper;
 import com.order.serviceorder.mappers.UserMapper;
+import com.order.serviceorder.repositories.OrderDishDetailsRepository;
 import com.order.serviceorder.repositories.OrderRepository;
 import com.order.serviceorder.repositories.UserRepository;
 import com.order.serviceorder.validations.OrderValidations;
@@ -37,6 +39,8 @@ public class OrderService extends OrderValidations {
     @Autowired
     private UserRepository userRepository;
     @Autowired
+    private OrderDishDetailsRepository orderDishDetailsRepository;
+    @Autowired
     private OrderMapper orderMapper;
     @Autowired
     private DishMapper dishMapper;
@@ -52,7 +56,6 @@ public class OrderService extends OrderValidations {
         UserEntity user = userRepository.findById(dto.getUser()).get();
         validateUserOrderActive(user.isOrderActive(), dto.getUser());
         OrderEntity order = orderMapper.requestToOrder(dto);
-        String dishes = "";
         for ( DishForOrderDto value : dto.getDish() ) {
             DishEntity entity;
             try {
@@ -62,10 +65,11 @@ public class OrderService extends OrderValidations {
             }
             validateDishActive(!entity.isActive(), value.getIdDish());
             validateDishCampus(entity.getCampus().getId(), dto.getCampus(), value.getIdDish());
-            dishes += value.getIdDish() + " " + value.getQuantity() + " ";
         }
-        order.setDishes(dishes);
-        orderRepository.save(order);
+        OrderEntity orderEntity = orderRepository.save(order);
+        for ( DishForOrderDto value : dto.getDish() ) {
+            orderDishDetailsRepository.save(new OrderDishDetailsEntity(value.getQuantity(), orderEntity, value.getIdDish()));
+        }
         user.setOrderActive(!user.isOrderActive());
         userRepository.save(user);
     }
@@ -76,13 +80,13 @@ public class OrderService extends OrderValidations {
             List<OrderResponseDto> responsesDto = new ArrayList<>();
             for ( OrderEntity order : orderEntities ) {
                 OrderResponseDto responseDto = new OrderResponseDto(order.getState(), userMapper.entityToRequest(order.getUserOrder()), employeeMapper.entityToRequest(order.getEmployeeOrder()), order.getDeliveryId());
-                String[] dishes = order.getDishes().split(" ");
+                List<OrderDishDetailsEntity> dishesEntity = orderDishDetailsRepository.findByOrderDish(order);
                 List<DishResponseDto> dishEntities = new ArrayList<>();
-                for (int i = 0; i < dishes.length; i += 2) {
-                    DishEntity entity = restTemplate.getForObject("http://localhost:8081/serviceDishes/dishes/get/" + dishes[i], DishEntity.class);
+                for ( OrderDishDetailsEntity dishDetails : dishesEntity) {
+                    DishEntity entity = restTemplate.getForObject("http://localhost:8081/serviceDishes/dishes/get/" + dishDetails.getDish(), DishEntity.class);
                     DishResponseDto dish = dishMapper.entityToResponse(entity);
-                    if (i == 0) responseDto.setCampus(entity.getCampus());
-                    dish.setQuantity(Integer.parseInt(dishes[i + 1]));
+                    responseDto.setCampus(entity.getCampus());
+                    dish.setQuantity(dishDetails.getQuantity());
                     dishEntities.add(dish);
                 }
                 responseDto.setDishes(dishEntities);

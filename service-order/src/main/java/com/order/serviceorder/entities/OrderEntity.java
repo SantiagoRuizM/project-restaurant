@@ -1,17 +1,24 @@
 package com.order.serviceorder.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import java.util.List;
 
 @Entity(name = "order_entity")
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class OrderEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    @Column(name = "dishes", nullable = false)
-    private String dishes;
+    @OneToMany(mappedBy = "orderDish")
+    @JsonManagedReference
+    @JsonIgnore
+    private List<OrderDishDetailsEntity> ordersDish;
     @Column(name = "campus", nullable = false)
     private Long campus;
     @Column(name = "state", nullable = false)
@@ -30,9 +37,9 @@ public class OrderEntity {
     public OrderEntity() {
     }
 
-    public OrderEntity(Long id, String dishes, Long campus, String state, UserEntity userOrder, EmployeeEntity employeeOrder, String deliveryId) {
+    public OrderEntity(Long id, List<OrderDishDetailsEntity> ordersDish, Long campus, String state, UserEntity userOrder, EmployeeEntity employeeOrder, String deliveryId) {
         this.id = id;
-        this.dishes = dishes;
+        this.ordersDish = ordersDish;
         this.campus = campus;
         this.state = state;
         this.userOrder = userOrder;
@@ -48,12 +55,12 @@ public class OrderEntity {
         this.id = id;
     }
 
-    public String getDishes() {
-        return dishes;
+    public List<OrderDishDetailsEntity> getOrdersDish() {
+        return ordersDish;
     }
 
-    public void setDishes(String dishes) {
-        this.dishes = dishes;
+    public void setOrdersDish(List<OrderDishDetailsEntity> ordersDish) {
+        this.ordersDish = ordersDish;
     }
 
     public Long getCampus() {
