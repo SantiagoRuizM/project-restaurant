@@ -8,7 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="server-eureka" />
       </profile>
-      <profile name="Annotation profile for service-claim" enabled="true">
+      <profile name="Annotation profile for service-order" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
