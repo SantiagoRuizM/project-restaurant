@@ -174,5 +174,8 @@ public class OrderService extends OrderValidations {
         data.setState("Cancelado");
         orderRepository.save(data);
         orderStateRepository.save(new OrderStateEntity(data.getId(), data.getState(), data.getUserOrder()));
+        UserEntity user = userRepository.findById(data.getUserOrder().getId()).get();
+        user.setOrderActive(!user.isOrderActive());
+        userRepository.save(user);
     }
 }
