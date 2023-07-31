@@ -1,17 +1,25 @@
 package com.order.serviceorder.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity(name = "order_entity")
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class OrderEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    @Column(name = "dishes", nullable = false)
-    private String dishes;
+    @OneToMany(mappedBy = "orderDish")
+    @JsonManagedReference
+    @JsonIgnore
+    private List<OrderDishDetailsEntity> ordersDish;
     @Column(name = "campus", nullable = false)
     private Long campus;
     @Column(name = "state", nullable = false)
@@ -24,17 +32,26 @@ public class OrderEntity {
     @JoinColumn(name = "employee_order_id")
     @JsonBackReference
     private EmployeeEntity employeeOrder = null;
+    @Column(name = "delivery_id")
+    private String deliveryId = null;
+    @Column(name = "start_order")
+    private LocalDateTime startOrder = LocalDateTime.now();
+    @Column(name = "end_order")
+    private LocalDateTime endOrder = null;
 
     public OrderEntity() {
     }
 
-    public OrderEntity(Long id, String dishes, Long campus, String state, UserEntity userOrder, EmployeeEntity employeeOrder) {
+    public OrderEntity(Long id, List<OrderDishDetailsEntity> ordersDish, Long campus, String state, UserEntity userOrder, EmployeeEntity employeeOrder, String deliveryId, LocalDateTime startOrder, LocalDateTime endOrder) {
         this.id = id;
-        this.dishes = dishes;
+        this.ordersDish = ordersDish;
         this.campus = campus;
         this.state = state;
         this.userOrder = userOrder;
         this.employeeOrder = employeeOrder;
+        this.deliveryId = deliveryId;
+        this.startOrder = startOrder;
+        this.endOrder = endOrder;
     }
 
     public Long getId() {
@@ -45,12 +62,12 @@ public class OrderEntity {
         this.id = id;
     }
 
-    public String getDishes() {
-        return dishes;
+    public List<OrderDishDetailsEntity> getOrdersDish() {
+        return ordersDish;
     }
 
-    public void setDishes(String dishes) {
-        this.dishes = dishes;
+    public void setOrdersDish(List<OrderDishDetailsEntity> ordersDish) {
+        this.ordersDish = ordersDish;
     }
 
     public Long getCampus() {
@@ -83,5 +100,29 @@ public class OrderEntity {
 
     public void setEmployeeOrder(EmployeeEntity employeeOrder) {
         this.employeeOrder = employeeOrder;
+    }
+
+    public String getDeliveryId() {
+        return deliveryId;
+    }
+
+    public void setDeliveryId(String deliveryId) {
+        this.deliveryId = deliveryId;
+    }
+
+    public LocalDateTime getStartOrder() {
+        return startOrder;
+    }
+
+    public void setStartOrder(LocalDateTime startOrder) {
+        this.startOrder = startOrder;
+    }
+
+    public LocalDateTime getEndOrder() {
+        return endOrder;
+    }
+
+    public void setEndOrder(LocalDateTime endOrder) {
+        this.endOrder = endOrder;
     }
 }

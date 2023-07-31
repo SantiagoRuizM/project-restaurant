@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionController {
 
-    @ExceptionHandler(DishFailedResponseController.class)
-    public ResponseEntity<ResponseErrorServerDto> handlerDishFailedResponseController(DishFailedResponseController dishFailedResponseController) {
-        return new ResponseEntity<>(new ResponseErrorServerDto("The request has failed", dishFailedResponseController.getMessage(), HttpStatus.SERVICE_UNAVAILABLE), HttpStatus.SERVICE_UNAVAILABLE);
+    @ExceptionHandler(DishFailedResponseControllerException.class)
+    public ResponseEntity<ResponseErrorServerDto> handlerDishFailedResponseControllerException(DishFailedResponseControllerException dishFailedResponseControllerException) {
+        return new ResponseEntity<>(new ResponseErrorServerDto("The request has failed", dishFailedResponseControllerException.getMessage(), HttpStatus.SERVICE_UNAVAILABLE), HttpStatus.SERVICE_UNAVAILABLE);
     }
 
     @ExceptionHandler(InactiveDishException.class)
@@ -32,6 +32,21 @@ public class GlobalExceptionController {
 
     @ExceptionHandler(RecordNotFoundException.class)
     public ResponseEntity<ResponseErrorDto> handlerRecordNotFoundException(RecordNotFoundException recordNotFoundException) {
-        return new ResponseEntity<>(new ResponseErrorDto(recordNotFoundException.getMessage(), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ResponseErrorDto(recordNotFoundException.getMessage(), HttpStatus.NOT_FOUND), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(StateDeliveryException.class)
+    public ResponseEntity<ResponseErrorDto> handlerStateDeliveryException(StateDeliveryException stateDeliveryException) {
+        return new ResponseEntity<>(new ResponseErrorDto(stateDeliveryException.getMessage(), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(OrderInPreparationException.class)
+    public ResponseEntity<ResponseErrorDto> handlerOrderInPreparationException(OrderInPreparationException orderInPreparationException) {
+        return new ResponseEntity<>(new ResponseErrorDto(orderInPreparationException.getMessage(), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(OrderCancelledException.class)
+    public ResponseEntity<ResponseErrorDto> handlerOrderCancelledException(OrderCancelledException orderCancelledException) {
+        return new ResponseEntity<>(new ResponseErrorDto(orderCancelledException.getMessage(), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
     }
 }

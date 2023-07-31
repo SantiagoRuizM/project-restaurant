@@ -30,4 +30,20 @@ public class OrderValidations {
     public static void validateOrderPresent(Optional<OrderEntity> order, Long id) {
         if (order.isEmpty()) throw new RecordNotFoundException("The order with id " + id + ": was not found");
     }
+
+    public static void validateOrderPresent(Optional<OrderEntity> order, String deliveryId) {
+        if (order.isEmpty()) throw new RecordNotFoundException("The order with delivery id " + deliveryId + ": was not found");
+    }
+
+    public static void validateStateFinish(String state, Long id) {
+        if (state.equals("Entregado")) throw new StateDeliveryException("The order with id " + id + ": has already been delivered");
+    }
+
+    public static void validateStateCancelled(String state, Long id) {
+        if (state.equals("Cancelado")) throw new OrderCancelledException("The order with id " + id + ": has been canceled");
+    }
+
+    public static void validateStateNotEarring(String state, Long id) {
+        if (!state.equals("Pendiente")) throw new OrderInPreparationException("The order with id " + id + ": sorry, you order is already in preparation and cannot be canceled");
+    }
 }

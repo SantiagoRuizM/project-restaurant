@@ -7,12 +7,12 @@ public class DishResponseDto {
     private String name;
     private Long price;
     private CategoryEntity category;
-    private Integer quantity;
+    private Long quantity;
 
     public DishResponseDto() {
     }
 
-    public DishResponseDto(String name, Long price, CategoryEntity category, Integer quantity) {
+    public DishResponseDto(String name, Long price, CategoryEntity category, Long quantity) {
         this.name = name;
         this.price = price;
         this.category = category;
@@ -43,11 +43,11 @@ public class DishResponseDto {
         this.category = category;
     }
 
-    public Integer getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(Long quantity) {
         this.quantity = quantity;
     }
 }

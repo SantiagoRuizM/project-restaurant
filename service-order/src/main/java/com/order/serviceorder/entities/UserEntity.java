@@ -23,6 +23,10 @@ public class UserEntity {
     @JsonManagedReference
     @JsonIgnore
     private List<OrderEntity> orderEntities;
+    @OneToMany(mappedBy = "orderUser")
+    @JsonManagedReference
+    @JsonIgnore
+    private List<OrderStateEntity> orderStateEntities;
 
     public UserEntity() {
     }

@@ -13,14 +13,21 @@ public class OrderResponseDto {
     private String state;
     private UserRequestDto user;
     private EmployeeRequestDto employee;
+    private String deliveryId;
 
     public OrderResponseDto() {
     }
 
-    public OrderResponseDto(String state, UserRequestDto user, EmployeeRequestDto employee) {
+    public OrderResponseDto(String state, UserRequestDto user, EmployeeRequestDto employee, String deliveryId) {
         this.state = state;
         this.user = user;
         this.employee = employee;
+        this.deliveryId = deliveryId;
+    }
+
+    public OrderResponseDto(CampusEntity campus, String deliveryId) {
+        this.campus = campus;
+        this.deliveryId = deliveryId;
     }
 
     public List<DishResponseDto> getDishes() {
@@ -61,5 +68,13 @@ public class OrderResponseDto {
 
     public void setEmployee(EmployeeRequestDto employee) {
         this.employee = employee;
+    }
+
+    public String getDeliveryId() {
+        return deliveryId;
+    }
+
+    public void setDeliveryId(String deliveryId) {
+        this.deliveryId = deliveryId;
     }
 }

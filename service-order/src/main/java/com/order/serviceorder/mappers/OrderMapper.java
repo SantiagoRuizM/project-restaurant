@@ -1,5 +1,6 @@
 package com.order.serviceorder.mappers;
 
+import com.order.serviceorder.dtos.order.OrderClaimResponseDto;
 import com.order.serviceorder.dtos.order.OrderRequestDto;
 import com.order.serviceorder.dtos.order.OrderResponseDto;
 import com.order.serviceorder.entities.OrderEntity;
@@ -13,7 +14,7 @@ public interface OrderMapper {
 
     @Mappings({
             @Mapping(target = "id", ignore = true),
-            @Mapping(target = "dishes", ignore = true),
+            @Mapping(target = "ordersDish", ignore = true),
             @Mapping(target = "state", ignore = true),
             @Mapping(target = "employeeOrder", ignore = true),
             @Mapping(source = "user", target = "userOrder.id")
@@ -27,4 +28,6 @@ public interface OrderMapper {
     })
     OrderRequestDto orderToRequest(OrderEntity orderEntity);
     List<OrderRequestDto> ordersToRequests(List<OrderEntity> orderEntities);
+
+    OrderClaimResponseDto orderToResponse(OrderResponseDto orderResponseDto);
 }
