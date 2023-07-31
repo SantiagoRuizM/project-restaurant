@@ -32,3 +32,4 @@ INSERT INTO dish_entity (name, price, description, url_image, category, active, 
 INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Tacos al pastor', 9000, 'Tacos mexicanos al pastor con piña', 'https://example.com/tacos_pastor.jpg', 3, 1, 4)
 INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Sopa de lentejas', 7000, 'Sopa reconfortante de lentejas', 'https://example.com/sopa_lentejas.jpg', 4, 1, 2)
 INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Tostones con guacamole', 5500, 'Tostones crujientes con guacamole', 'https://example.com/tostones_guacamole.jpg', 5, 0, 5)
+INSERT INTO dish_entity (name, price, description, url_image, category, active, campus) VALUES ('Cafe', 1500, 'Bebida relajante y para coger fuerzas', 'http.com', 1, 1, 3)
