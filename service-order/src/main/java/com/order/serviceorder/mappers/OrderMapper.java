@@ -1,6 +1,8 @@
 package com.order.serviceorder.mappers;
 
+import com.order.serviceorder.dtos.order.OrderClaimResponseDto;
 import com.order.serviceorder.dtos.order.OrderRequestDto;
+import com.order.serviceorder.dtos.order.OrderResponseDto;
 import com.order.serviceorder.entities.OrderEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -26,4 +28,6 @@ public interface OrderMapper {
     })
     OrderRequestDto orderToRequest(OrderEntity orderEntity);
     List<OrderRequestDto> ordersToRequests(List<OrderEntity> orderEntities);
+
+    OrderClaimResponseDto orderToResponse(OrderResponseDto orderResponseDto);
 }

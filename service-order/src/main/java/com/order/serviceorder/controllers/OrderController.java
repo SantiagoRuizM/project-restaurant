@@ -51,6 +51,11 @@ public class OrderController {
         return new ResponseEntity<>(service.getAllOrdersTimeUsers(), HttpStatus.OK);
     }
 
+    @GetMapping("/get/delivery")
+    public ResponseEntity<OrderClaimResponseDto> getAllOrdersClaim(@RequestParam String deliveryId) {
+        return new ResponseEntity<>(service.getAllOrdersClaim(deliveryId), HttpStatus.OK);
+    }
+
     @PutMapping("/update/stateOrder/{id}/{employee}")
     public ResponseEntity<Map<String, String>> updateOrderEmployeeState(@PathVariable Long id, @PathVariable Long employee) {
         Map<String, String> map = new HashMap<>();

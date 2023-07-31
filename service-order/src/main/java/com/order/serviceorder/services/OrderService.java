@@ -7,6 +7,7 @@ import com.order.serviceorder.dtos.employee.EmployeeResponseDto;
 import com.order.serviceorder.dtos.order.*;
 import com.order.serviceorder.entities.*;
 import com.order.serviceorder.exceptions.*;
+import com.order.serviceorder.externals.CampusEntity;
 import com.order.serviceorder.externals.DishEntity;
 import com.order.serviceorder.mappers.DishMapper;
 import com.order.serviceorder.mappers.EmployeeMapper;
@@ -164,6 +165,23 @@ public class OrderService extends OrderValidations {
             responsesDto.add(responseDto);
         }
         return responsesDto;
+    }
+
+    @Transactional(readOnly = true)
+    public OrderClaimResponseDto getAllOrdersClaim(String deliveryId) {
+        Optional<OrderEntity> orderEntity = orderRepository.findByDeliveryId(deliveryId);
+        validateOrderPresent(orderEntity, deliveryId);
+        List<OrderDishDetailsEntity> dishesEntity = orderDishDetailsRepository.findByOrderDish(orderEntity.get());
+        CampusEntity campus = new CampusEntity();
+        for ( OrderDishDetailsEntity dishDetails : dishesEntity) {
+            try {
+                campus = restTemplate.getForObject("http://localhost:8081/serviceDishes/dishes/get/" + dishDetails.getDish(), DishEntity.class).getCampus();
+            } catch (Exception e) {
+                throw new DishFailedResponseControllerException(e.getMessage());
+            }
+            break;
+        }
+        return orderMapper.orderToResponse(new OrderResponseDto(campus, deliveryId));
     }
 
     public String[] updateOrderEmployeeState(Long id, Long employee) {

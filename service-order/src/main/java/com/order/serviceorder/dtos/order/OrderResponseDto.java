@@ -25,6 +25,11 @@ public class OrderResponseDto {
         this.deliveryId = deliveryId;
     }
 
+    public OrderResponseDto(CampusEntity campus, String deliveryId) {
+        this.campus = campus;
+        this.deliveryId = deliveryId;
+    }
+
     public List<DishResponseDto> getDishes() {
         return dishes;
     }
