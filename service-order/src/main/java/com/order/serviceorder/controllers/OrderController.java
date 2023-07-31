@@ -1,9 +1,7 @@
 package com.order.serviceorder.controllers;
 
 import com.order.serviceorder.dtos.PageGeneric;
-import com.order.serviceorder.dtos.order.OrderCanceledRequestDto;
-import com.order.serviceorder.dtos.order.OrderRequestDto;
-import com.order.serviceorder.dtos.order.OrderResponseDto;
+import com.order.serviceorder.dtos.order.*;
 import com.order.serviceorder.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +26,11 @@ public class OrderController {
         return new ResponseEntity<>(map, HttpStatus.CREATED);
     }
 
+    @GetMapping("/getAll")
+    public ResponseEntity<List<OrderResponseDto>> getAllOrders() {
+        return new ResponseEntity<>(service.getAllOrders(), HttpStatus.OK);
+    }
+
     @GetMapping("/getAll/{state}/{campus}")
     public ResponseEntity<PageGeneric<List<OrderResponseDto>>> getAllOrdersStateCampus(@PathVariable String state, @PathVariable Long campus, @RequestParam(value = "1")  int page) {
         return new ResponseEntity<>(service.getAllOrdersStateCampus(state, campus, page - 1), HttpStatus.OK);
@@ -38,9 +41,14 @@ public class OrderController {
         return new ResponseEntity<>(service.getAllOrdersState(state, page - 1), HttpStatus.OK);
     }
 
-    @GetMapping("/getAll")
-    public ResponseEntity<List<OrderResponseDto>> getAllOrders() {
-        return new ResponseEntity<>(service.getAllOrders(), HttpStatus.OK);
+    @GetMapping("/getAll/time")
+    public ResponseEntity<List<OrderTimeResponseDto>> getAllOrdersTime() {
+        return new ResponseEntity<>(service.getAllOrdersTime(), HttpStatus.OK);
+    }
+
+    @GetMapping("/getAll/rankingTime")
+    public ResponseEntity<List<OrderTimeEmployeeResponseDto>> getAllOrdersTimeUsers() {
+        return new ResponseEntity<>(service.getAllOrdersTimeUsers(), HttpStatus.OK);
     }
 
     @PutMapping("/update/stateOrder/{id}/{employee}")

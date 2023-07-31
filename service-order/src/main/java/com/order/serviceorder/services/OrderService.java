@@ -3,9 +3,8 @@ package com.order.serviceorder.services;
 import com.order.serviceorder.dtos.PageGeneric;
 import com.order.serviceorder.dtos.dish.DishForOrderDto;
 import com.order.serviceorder.dtos.dish.DishResponseDto;
-import com.order.serviceorder.dtos.order.OrderCanceledRequestDto;
-import com.order.serviceorder.dtos.order.OrderRequestDto;
-import com.order.serviceorder.dtos.order.OrderResponseDto;
+import com.order.serviceorder.dtos.employee.EmployeeResponseDto;
+import com.order.serviceorder.dtos.order.*;
 import com.order.serviceorder.entities.*;
 import com.order.serviceorder.exceptions.*;
 import com.order.serviceorder.externals.DishEntity;
@@ -13,10 +12,7 @@ import com.order.serviceorder.mappers.DishMapper;
 import com.order.serviceorder.mappers.EmployeeMapper;
 import com.order.serviceorder.mappers.OrderMapper;
 import com.order.serviceorder.mappers.UserMapper;
-import com.order.serviceorder.repositories.OrderDishDetailsRepository;
-import com.order.serviceorder.repositories.OrderRepository;
-import com.order.serviceorder.repositories.OrderStateRepository;
-import com.order.serviceorder.repositories.UserRepository;
+import com.order.serviceorder.repositories.*;
 import com.order.serviceorder.validations.OrderValidations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,10 +21,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService extends OrderValidations {
@@ -41,6 +40,8 @@ public class OrderService extends OrderValidations {
     private OrderDishDetailsRepository orderDishDetailsRepository;
     @Autowired
     private OrderStateRepository orderStateRepository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
     @Autowired
     private OrderMapper orderMapper;
     @Autowired
@@ -135,6 +136,36 @@ public class OrderService extends OrderValidations {
         }
     }
 
+    @Transactional(readOnly = true)
+    public List<OrderTimeResponseDto> getAllOrdersTime() {
+        return orderRepository.findByEndOrderIsNotNull()
+                .stream().map(orderEntity -> {
+                    Duration duration = Duration.between(orderEntity.getStartOrder(), orderEntity.getEndOrder());
+                    return new OrderTimeResponseDto(orderEntity.getId(), duration.toMinutes() + " minutes");
+                }).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderTimeEmployeeResponseDto> getAllOrdersTimeUsers() {
+        List<OrderTimeEmployeeResponseDto> responsesDto = new ArrayList<>();
+        List<EmployeeEntity> employees = employeeRepository.findAll();
+        for ( EmployeeEntity employee : employees ) {
+            long quantityOrders = 0;
+            OrderTimeEmployeeResponseDto responseDto = new OrderTimeEmployeeResponseDto(new EmployeeResponseDto(employee.getName()));
+            Duration durationGeneral = Duration.ZERO;
+            List<OrderEntity> orders = orderRepository.findByEndOrderIsNotNullAndEmployeeOrder(employee);
+            for ( OrderEntity order : orders ) {
+                durationGeneral = durationGeneral.plus(Duration.between(order.getStartOrder(), order.getEndOrder()));
+                quantityOrders++;
+            }
+            if (quantityOrders == 0) responseDto.setTimeOrder("0 minutes");
+            else responseDto.setTimeOrder((durationGeneral.toMinutes() / quantityOrders) + " minutes");
+            responseDto.setQuantityOrders((int) quantityOrders);
+            responsesDto.add(responseDto);
+        }
+        return responsesDto;
+    }
+
     public String[] updateOrderEmployeeState(Long id, Long employee) {
         Optional<OrderEntity> order = orderRepository.findById(id);
         validateOrderPresent(order, id);
@@ -149,6 +180,7 @@ public class OrderService extends OrderValidations {
                 break;
             case "En preparación":
                 data.setState("Listo");
+                data.setEndOrder(LocalDateTime.now());
                 data.setDeliveryId(UUID.randomUUID().toString());
                 state[1] = data.getDeliveryId();
                 break;

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity(name = "order_entity")
@@ -33,11 +34,15 @@ public class OrderEntity {
     private EmployeeEntity employeeOrder = null;
     @Column(name = "delivery_id")
     private String deliveryId = null;
+    @Column(name = "start_order")
+    private LocalDateTime startOrder = LocalDateTime.now();
+    @Column(name = "end_order")
+    private LocalDateTime endOrder = null;
 
     public OrderEntity() {
     }
 
-    public OrderEntity(Long id, List<OrderDishDetailsEntity> ordersDish, Long campus, String state, UserEntity userOrder, EmployeeEntity employeeOrder, String deliveryId) {
+    public OrderEntity(Long id, List<OrderDishDetailsEntity> ordersDish, Long campus, String state, UserEntity userOrder, EmployeeEntity employeeOrder, String deliveryId, LocalDateTime startOrder, LocalDateTime endOrder) {
         this.id = id;
         this.ordersDish = ordersDish;
         this.campus = campus;
@@ -45,6 +50,8 @@ public class OrderEntity {
         this.userOrder = userOrder;
         this.employeeOrder = employeeOrder;
         this.deliveryId = deliveryId;
+        this.startOrder = startOrder;
+        this.endOrder = endOrder;
     }
 
     public Long getId() {
@@ -101,5 +108,21 @@ public class OrderEntity {
 
     public void setDeliveryId(String deliveryId) {
         this.deliveryId = deliveryId;
+    }
+
+    public LocalDateTime getStartOrder() {
+        return startOrder;
+    }
+
+    public void setStartOrder(LocalDateTime startOrder) {
+        this.startOrder = startOrder;
+    }
+
+    public LocalDateTime getEndOrder() {
+        return endOrder;
+    }
+
+    public void setEndOrder(LocalDateTime endOrder) {
+        this.endOrder = endOrder;
     }
 }
