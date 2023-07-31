@@ -1,6 +1,7 @@
 package com.order.serviceorder.controllers;
 
 import com.order.serviceorder.dtos.PageGeneric;
+import com.order.serviceorder.dtos.order.OrderCanceledRequestDto;
 import com.order.serviceorder.dtos.order.OrderRequestDto;
 import com.order.serviceorder.dtos.order.OrderResponseDto;
 import com.order.serviceorder.services.OrderService;
@@ -55,5 +56,14 @@ public class OrderController {
                 map.put("message", "Updated success!");
                 return new ResponseEntity<>(map, HttpStatus.ACCEPTED);
         }
+    }
+
+    @PutMapping("/update/cancelOrder")
+    public ResponseEntity<Map<String, String>> updateOrderCancelled(@RequestBody OrderCanceledRequestDto dto) {
+        service.updateOrderCancelled(dto);
+        Map<String, String> map = new HashMap<>();
+        map.put("message", "Updated success!");
+        map.put("reasonCancellation", dto.getReasonCancellation());
+        return new ResponseEntity<>(map, HttpStatus.ACCEPTED);
     }
 }

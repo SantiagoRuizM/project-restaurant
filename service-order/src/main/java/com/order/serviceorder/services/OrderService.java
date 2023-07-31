@@ -3,20 +3,19 @@ package com.order.serviceorder.services;
 import com.order.serviceorder.dtos.PageGeneric;
 import com.order.serviceorder.dtos.dish.DishForOrderDto;
 import com.order.serviceorder.dtos.dish.DishResponseDto;
+import com.order.serviceorder.dtos.order.OrderCanceledRequestDto;
 import com.order.serviceorder.dtos.order.OrderRequestDto;
 import com.order.serviceorder.dtos.order.OrderResponseDto;
-import com.order.serviceorder.entities.EmployeeEntity;
-import com.order.serviceorder.entities.OrderDishDetailsEntity;
-import com.order.serviceorder.entities.UserEntity;
+import com.order.serviceorder.entities.*;
 import com.order.serviceorder.exceptions.*;
 import com.order.serviceorder.externals.DishEntity;
-import com.order.serviceorder.entities.OrderEntity;
 import com.order.serviceorder.mappers.DishMapper;
 import com.order.serviceorder.mappers.EmployeeMapper;
 import com.order.serviceorder.mappers.OrderMapper;
 import com.order.serviceorder.mappers.UserMapper;
 import com.order.serviceorder.repositories.OrderDishDetailsRepository;
 import com.order.serviceorder.repositories.OrderRepository;
+import com.order.serviceorder.repositories.OrderStateRepository;
 import com.order.serviceorder.repositories.UserRepository;
 import com.order.serviceorder.validations.OrderValidations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +40,8 @@ public class OrderService extends OrderValidations {
     @Autowired
     private OrderDishDetailsRepository orderDishDetailsRepository;
     @Autowired
+    private OrderStateRepository orderStateRepository;
+    @Autowired
     private OrderMapper orderMapper;
     @Autowired
     private DishMapper dishMapper;
@@ -61,7 +62,7 @@ public class OrderService extends OrderValidations {
             try {
                 entity = restTemplate.getForObject("http://localhost:8081/serviceDishes/dishes/get/" + value.getIdDish(), DishEntity.class);
             } catch (Exception e) {
-                throw new DishFailedResponseController(e.getMessage());
+                throw new DishFailedResponseControllerException(e.getMessage());
             }
             validateDishActive(!entity.isActive(), value.getIdDish());
             validateDishCampus(entity.getCampus().getId(), dto.getCampus(), value.getIdDish());
@@ -70,6 +71,7 @@ public class OrderService extends OrderValidations {
         for ( DishForOrderDto value : dto.getDish() ) {
             orderDishDetailsRepository.save(new OrderDishDetailsEntity(value.getQuantity(), orderEntity, value.getIdDish()));
         }
+        orderStateRepository.save(new OrderStateEntity(orderEntity.getId(), "Pendiente", orderEntity.getUserOrder()));
         user.setOrderActive(!user.isOrderActive());
         userRepository.save(user);
     }
@@ -94,7 +96,7 @@ public class OrderService extends OrderValidations {
             }
             return responsesDto;
         } catch (Exception e) {
-            throw new DishFailedResponseController(e.getMessage());
+            throw new DishFailedResponseControllerException(e.getMessage());
         }
     }
 
@@ -103,7 +105,7 @@ public class OrderService extends OrderValidations {
         try {
             return getAllOrdersGeneric(orderRepository.findAll());
         } catch (Exception e) {
-            throw new DishFailedResponseController(e.getMessage());
+            throw new DishFailedResponseControllerException(e.getMessage());
         }
     }
 
@@ -116,7 +118,7 @@ public class OrderService extends OrderValidations {
             Page<OrderResponseDto> info = new PageImpl<>(ordersResponsesDto, PageRequest.of(page, 10), ordersResponsesDto.size());
             return new PageGeneric<>(info.getTotalPages(), page + 1, responseDto.size(), info.getContent());
         } catch (Exception e) {
-            throw new DishFailedResponseController(e.getMessage());
+            throw new DishFailedResponseControllerException(e.getMessage());
         }
     }
 
@@ -129,15 +131,16 @@ public class OrderService extends OrderValidations {
             Page<OrderResponseDto> info = new PageImpl<>(ordersResponsesDto, PageRequest.of(page, 10), ordersResponsesDto.size());
             return new PageGeneric<>(info.getTotalPages(), page + 1, responseDto.size(), info.getContent());
         } catch (Exception e) {
-            throw new DishFailedResponseController(e.getMessage());
+            throw new DishFailedResponseControllerException(e.getMessage());
         }
     }
 
     public String[] updateOrderEmployeeState(Long id, Long employee) {
-        Optional<OrderEntity> request = orderRepository.findById(id);
-        validateOrderPresent(request, id);
-        OrderEntity data = request.get();
+        Optional<OrderEntity> order = orderRepository.findById(id);
+        validateOrderPresent(order, id);
+        OrderEntity data = order.get();
         validateStateFinish(data.getState(), id);
+        validateStateCancelled(data.getState(), id);
         data.setEmployeeOrder(new EmployeeEntity(employee));
         String[] state = new String[2];
         switch (data.getState()) {
@@ -151,10 +154,25 @@ public class OrderService extends OrderValidations {
                 break;
             case "Listo":
                 data.setState("Entregado");
+                UserEntity user = userRepository.findById(data.getUserOrder().getId()).get();
+                user.setOrderActive(!user.isOrderActive());
+                userRepository.save(user);
                 break;
         }
         orderRepository.save(data);
+        orderStateRepository.save(new OrderStateEntity(data.getId(), data.getState(), data.getUserOrder()));
         state[0] = data.getState();
         return state;
+    }
+
+    public void updateOrderCancelled(OrderCanceledRequestDto requestDto) {
+        Optional<OrderEntity> order = orderRepository.findById(requestDto.getNumberOrder());
+        validateOrderPresent(order, requestDto.getNumberOrder());
+        OrderEntity data = order.get();
+        validateStateCancelled(data.getState(), data.getId());
+        validateStateNotEarring(data.getState(), data.getId());
+        data.setState("Cancelado");
+        orderRepository.save(data);
+        orderStateRepository.save(new OrderStateEntity(data.getId(), data.getState(), data.getUserOrder()));
     }
 }
