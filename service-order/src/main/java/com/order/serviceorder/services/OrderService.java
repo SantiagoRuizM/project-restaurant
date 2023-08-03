@@ -73,7 +73,7 @@ public class OrderService extends OrderValidations {
         for ( DishForOrderDto value : dto.getDish() ) {
             orderDishDetailsRepository.save(new OrderDishDetailsEntity(value.getQuantity(), orderEntity, value.getIdDish()));
         }
-        orderStateRepository.save(new OrderStateEntity(orderEntity.getId(), "Pendiente", orderEntity.getUserOrder()));
+        orderStateRepository.save(new OrderStateEntity(orderEntity.getId(), "Pendiente", orderEntity.getUserOrder(), null));
         user.setOrderActive(!user.isOrderActive());
         userRepository.save(user);
     }
@@ -105,7 +105,7 @@ public class OrderService extends OrderValidations {
     @Transactional(readOnly = true)
     public List<OrderResponseDto> getAllOrders() {
         try {
-            return getAllOrdersGeneric(orderRepository.findAll());
+            return getAllOrdersGeneric(orderRepository.findAllByOrderById());
         } catch (Exception e) {
             throw new DishFailedResponseControllerException(e.getMessage());
         }
@@ -192,25 +192,33 @@ public class OrderService extends OrderValidations {
         validateStateCancelled(data.getState(), id);
         data.setEmployeeOrder(new EmployeeEntity(employee));
         String[] state = new String[2];
+        LocalDateTime localDateTime = null;
+        String stateBefore = "";
         switch (data.getState()) {
             case "Pendiente":
                 data.setState("En preparación");
+                stateBefore = "Pendiente";
                 break;
             case "En preparación":
                 data.setState("Listo");
+                stateBefore = "En preparación";
                 data.setEndOrder(LocalDateTime.now());
                 data.setDeliveryId(UUID.randomUUID().toString());
                 state[1] = data.getDeliveryId();
                 break;
             case "Listo":
                 data.setState("Entregado");
+                stateBefore = "Listo";
                 UserEntity user = userRepository.findById(data.getUserOrder().getId()).get();
                 user.setOrderActive(!user.isOrderActive());
                 userRepository.save(user);
+                localDateTime = LocalDateTime.now();
                 break;
         }
         orderRepository.save(data);
-        orderStateRepository.save(new OrderStateEntity(data.getId(), data.getState(), data.getUserOrder()));
+        OrderStateEntity orderStateEntity = orderStateRepository.findByNumberOrderAndState(id, stateBefore);
+        orderStateEntity.setEndState(LocalDateTime.now());
+        orderStateRepository.saveAll(List.of(orderStateEntity, new OrderStateEntity(data.getId(), data.getState(), data.getUserOrder(), localDateTime)));
         state[0] = data.getState();
         return state;
     }
@@ -223,7 +231,7 @@ public class OrderService extends OrderValidations {
         validateStateNotEarring(data.getState(), data.getId());
         data.setState("Cancelado");
         orderRepository.save(data);
-        orderStateRepository.save(new OrderStateEntity(data.getId(), data.getState(), data.getUserOrder()));
+        orderStateRepository.save(new OrderStateEntity(data.getId(), data.getState(), data.getUserOrder(), LocalDateTime.now()));
         UserEntity user = userRepository.findById(data.getUserOrder().getId()).get();
         user.setOrderActive(!user.isOrderActive());
         userRepository.save(user);

@@ -10,6 +10,8 @@ import java.util.Optional;
 @Repository
 public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
 
+    List<OrderEntity> findAllByOrderById();
+
     List<OrderEntity> findByStateAndCampus(String state, Long campus);
 
     List<OrderEntity> findByState(String state);

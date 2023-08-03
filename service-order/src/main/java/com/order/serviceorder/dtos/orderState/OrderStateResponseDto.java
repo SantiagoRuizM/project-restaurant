@@ -7,14 +7,16 @@ public class OrderStateResponseDto {
     private Long numberOrder;
     private String state;
     private UserResponseDto user;
+    private String timeState;
 
     public OrderStateResponseDto() {
     }
 
-    public OrderStateResponseDto(Long numberOrder, String state, UserResponseDto user) {
+    public OrderStateResponseDto(Long numberOrder, String state, UserResponseDto user, String timeState) {
         this.numberOrder = numberOrder;
         this.state = state;
         this.user = user;
+        this.timeState = timeState;
     }
 
     public Long getNumberOrder() {
@@ -39,5 +41,13 @@ public class OrderStateResponseDto {
 
     public void setUser(UserResponseDto user) {
         this.user = user;
+    }
+
+    public String getTimeState() {
+        return timeState;
+    }
+
+    public void setTimeState(String timeState) {
+        this.timeState = timeState;
     }
 }
