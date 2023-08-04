@@ -3,6 +3,7 @@ package com.claim.serviceclaim.services;
 import com.claim.serviceclaim.dtos.claim.ClaimActionRequestDto;
 import com.claim.serviceclaim.dtos.claim.ClaimRequestDto;
 import com.claim.serviceclaim.entities.ClaimEntity;
+import com.claim.serviceclaim.enums.ActionEnum;
 import com.claim.serviceclaim.exceptions.DishFailedResponseControllerException;
 import com.claim.serviceclaim.externals.OrderClaimResponseDto;
 import com.claim.serviceclaim.repositories.ClaimRepository;
@@ -32,18 +33,18 @@ public class ClaimService extends ClaimValidations {
     }
 
     public List<ClaimEntity> getAllClaims() {
-        return claimRepository.findAll();
+        return claimRepository.findAllByOrderById();
     }
 
     public void updateClaimAccepted(ClaimActionRequestDto claimActionRequestDto) {
-        updateClaim(claimActionRequestDto, true);
+        updateClaim(claimActionRequestDto, ActionEnum.ACCEPTED);
     }
 
     public void updateClaimRejected(ClaimActionRequestDto claimActionRequestDto) {
-        updateClaim(claimActionRequestDto, false);
+        updateClaim(claimActionRequestDto, ActionEnum.REJECTED);
     }
 
-    public void updateClaim(ClaimActionRequestDto claimActionRequestDto, boolean accepted) {
+    public void updateClaim(ClaimActionRequestDto claimActionRequestDto, ActionEnum accepted) {
         Optional<ClaimEntity> claimEntity = claimRepository.findById(claimActionRequestDto.getClaimId());
         validateClaimPresent(claimEntity, claimActionRequestDto.getClaimId());
         ClaimEntity data = claimEntity.get();
