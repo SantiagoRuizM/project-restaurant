@@ -27,7 +27,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -184,26 +183,36 @@ public class OrderService extends OrderValidations {
         return orderMapper.orderToResponse(new OrderResponseDto(campus, deliveryId));
     }
 
-    public String[] updateOrderEmployeeState(Long id, Long employee) {
+    public void updateOrderEmployee(Long id, Long employee) {
         Optional<OrderEntity> order = orderRepository.findById(id);
         validateOrderPresent(order, id);
         OrderEntity data = order.get();
+        validateStateNotEarringForAssignEmployee(data.getState(), id);
+        validateEmployeeExists(!employeeRepository.existsById(employee), employee);
+        data.setEmployeeOrder(new EmployeeEntity(employee));
+        data.setState("En preparación");
+        orderRepository.save(data);
+        OrderStateEntity orderStateEntity = orderStateRepository.findByNumberOrderAndState(id, "Pendiente");
+        orderStateEntity.setEndState(LocalDateTime.now());
+        orderStateRepository.saveAll(List.of(orderStateEntity, new OrderStateEntity(data.getId(), data.getState(), data.getUserOrder(), null)));
+    }
+
+    public String[] updateOrderState(Long id) {
+        Optional<OrderEntity> order = orderRepository.findById(id);
+        validateOrderPresent(order, id);
+        OrderEntity data = order.get();
+        validateStateEarring(data.getState(), id);
         validateStateFinish(data.getState(), id);
         validateStateCancelled(data.getState(), id);
-        data.setEmployeeOrder(new EmployeeEntity(employee));
         String[] state = new String[2];
         LocalDateTime localDateTime = null;
         String stateBefore = "";
         switch (data.getState()) {
-            case "Pendiente":
-                data.setState("En preparación");
-                stateBefore = "Pendiente";
-                break;
             case "En preparación":
                 data.setState("Listo");
                 stateBefore = "En preparación";
                 data.setEndOrder(LocalDateTime.now());
-                data.setDeliveryId(UUID.randomUUID().toString());
+                data.setDeliveryId(data.getCampus() + data.getUserOrder().getName() + id + LocalDateTime.now());
                 state[1] = data.getDeliveryId();
                 break;
             case "Listo":
@@ -228,7 +237,7 @@ public class OrderService extends OrderValidations {
         validateOrderPresent(order, requestDto.getNumberOrder());
         OrderEntity data = order.get();
         validateStateCancelled(data.getState(), data.getId());
-        validateStateNotEarring(data.getState(), data.getId());
+        validateStateNotEarringForCancelled(data.getState(), data.getId());
         data.setState("Cancelado");
         orderRepository.save(data);
         orderStateRepository.save(new OrderStateEntity(data.getId(), data.getState(), data.getUserOrder(), LocalDateTime.now()));
