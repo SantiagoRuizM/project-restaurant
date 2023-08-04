@@ -39,13 +39,11 @@ public class DishService extends DishValidations {
     }
 
     @Transactional(readOnly = true)
-    public List<DishResponseDto> getAllDishes() {
-        return mapper.entitiesToResponses(repository.findAll());
-    }
-
-    @Transactional(readOnly = true)
     public PageGeneric<List<DishResponseDto>> getAllDishesCategoryCampus(Long category, Long campus, int page) {
-        List<DishResponseDto> dishResponseDtoList = mapper.entitiesToResponses(repository.findByCategoryIdOrCampusId(category, campus));
+        List<DishResponseDto> dishResponseDtoList;
+        if (campus == null && category == null) dishResponseDtoList = mapper.entitiesToResponses(repository.findAll());
+        else if (campus == null || category == null) dishResponseDtoList = mapper.entitiesToResponses(repository.findByCategoryIdOrCampusId(category, campus));
+        else dishResponseDtoList = mapper.entitiesToResponses(repository.findByCategoryIdAndCampusId(category, campus));
         validatePage(page, dishResponseDtoList.size());
         List<DishResponseDto> responseDto = dishResponseDtoList.subList(page * 10, Math.min(page * 10 + 10, dishResponseDtoList.size()));
         Page<DishResponseDto> info = new PageImpl<>(responseDto, PageRequest.of(page, 10), dishResponseDtoList.size());

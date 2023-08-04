@@ -36,13 +36,8 @@ public class DishController {
         return new ResponseEntity<>(service.getDish(id), HttpStatus.OK);
     }
 
-    @GetMapping("/getAll")
-    public ResponseEntity<List<DishResponseDto>> getAllDishes() {
-        return new ResponseEntity<>(service.getAllDishes(), HttpStatus.OK);
-    }
-
-    @GetMapping("/getAll/{category}/{campus}")
-    public ResponseEntity<PageGeneric<List<DishResponseDto>>> getAllDishesCategoryCampus(@PathVariable Long category, @PathVariable Long campus, @RequestParam(value = "1")  int page) {
+    @GetMapping("/getAll/categoryCampus")
+    public ResponseEntity<PageGeneric<List<DishResponseDto>>> getAllDishesCategoryCampus(@RequestParam(required = false) Long category, @RequestParam(required = false) Long campus, @RequestParam(value = "1")  int page) {
         return new ResponseEntity<>(service.getAllDishesCategoryCampus(category, campus, page - 1), HttpStatus.OK);
     }
 
