@@ -5,6 +5,7 @@ import com.order.serviceorder.dtos.dish.DishForOrderDto;
 import com.order.serviceorder.dtos.dish.DishResponseDto;
 import com.order.serviceorder.dtos.order.*;
 import com.order.serviceorder.entities.*;
+import com.order.serviceorder.enums.StateEnum;
 import com.order.serviceorder.exceptions.*;
 import com.order.serviceorder.externals.CampusEntity;
 import com.order.serviceorder.externals.DishEntity;
@@ -71,7 +72,7 @@ public class OrderService extends OrderValidations {
         for ( DishForOrderDto value : dto.getDish() ) {
             orderDishDetailsRepository.save(new OrderDishDetailsEntity(value.getQuantity(), orderEntity, value.getIdDish()));
         }
-        orderStateRepository.save(new OrderStateEntity(orderEntity.getId(), "Pendiente", orderEntity.getUserOrder(), null));
+        orderStateRepository.save(new OrderStateEntity(orderEntity.getId(), StateEnum.EARRING, orderEntity.getUserOrder(), null));
         user.setOrderActive(!user.isOrderActive());
         userRepository.save(user);
     }
@@ -110,7 +111,7 @@ public class OrderService extends OrderValidations {
     }
 
     @Transactional(readOnly = true)
-    public PageGeneric<List<OrderResponseDto>> getAllOrdersStateCampus(String state, Long campus, int page) {
+    public PageGeneric<List<OrderResponseDto>> getAllOrdersStateCampus(StateEnum state, Long campus, int page) {
         try {
             List<OrderResponseDto> ordersResponsesDto = getAllOrdersGeneric(orderRepository.findByStateAndCampus(state, campus));
             validatePage(page, ordersResponsesDto.size());
@@ -123,7 +124,7 @@ public class OrderService extends OrderValidations {
     }
 
     @Transactional(readOnly = true)
-    public PageGeneric<List<OrderResponseDto>> getAllOrdersState(String state, int page) {
+    public PageGeneric<List<OrderResponseDto>> getAllOrdersState(StateEnum state, int page) {
         try {
             List<OrderResponseDto> ordersResponsesDto = getAllOrdersGeneric(orderRepository.findByState(state));
             validatePage(page, ordersResponsesDto.size());
@@ -189,9 +190,9 @@ public class OrderService extends OrderValidations {
         validateStateNotEarringForAssignEmployee(data.getState(), id);
         validateEmployeeExists(!employeeRepository.existsById(employee), employee);
         data.setEmployeeOrder(new EmployeeEntity(employee));
-        data.setState("En preparación");
+        data.setState(StateEnum.IN_PREPARATION);
         orderRepository.save(data);
-        OrderStateEntity orderStateEntity = orderStateRepository.findByNumberOrderAndState(id, "Pendiente");
+        OrderStateEntity orderStateEntity = orderStateRepository.findByNumberOrderAndState(id, StateEnum.EARRING);
         orderStateEntity.setEndState(LocalDateTime.now());
         orderStateRepository.saveAll(List.of(orderStateEntity, new OrderStateEntity(data.getId(), data.getState(), data.getUserOrder(), null)));
     }
@@ -205,29 +206,26 @@ public class OrderService extends OrderValidations {
         validateStateCancelled(data.getState(), id);
         String[] state = new String[2];
         LocalDateTime localDateTime = null;
-        String stateBefore = "";
-        switch (data.getState()) {
-            case "En preparación":
-                data.setState("Listo");
-                stateBefore = "En preparación";
-                data.setEndOrder(LocalDateTime.now());
-                data.setDeliveryId(data.getCampus() + data.getUserOrder().getName() + id + LocalDateTime.now());
-                state[1] = data.getDeliveryId();
-                break;
-            case "Listo":
-                data.setState("Entregado");
-                stateBefore = "Listo";
-                UserEntity user = userRepository.findById(data.getUserOrder().getId()).get();
-                user.setOrderActive(!user.isOrderActive());
-                userRepository.save(user);
-                localDateTime = LocalDateTime.now();
-                break;
+        StateEnum stateBefore = null;
+        if (data.getState().equals(StateEnum.IN_PREPARATION)) {
+            data.setState(StateEnum.READY);
+            stateBefore = StateEnum.IN_PREPARATION;
+            data.setEndOrder(LocalDateTime.now());
+            data.setDeliveryId(data.getCampus() + data.getUserOrder().getName() + id + LocalDateTime.now());
+            state[1] = data.getDeliveryId();
+        } else if (data.getState().equals(StateEnum.READY)) {
+            data.setState(StateEnum.DELIVERED);
+            stateBefore = StateEnum.READY;
+            UserEntity user = userRepository.findById(data.getUserOrder().getId()).get();
+            user.setOrderActive(!user.isOrderActive());
+            userRepository.save(user);
+            localDateTime = LocalDateTime.now();
         }
         orderRepository.save(data);
         OrderStateEntity orderStateEntity = orderStateRepository.findByNumberOrderAndState(id, stateBefore);
         orderStateEntity.setEndState(LocalDateTime.now());
         orderStateRepository.saveAll(List.of(orderStateEntity, new OrderStateEntity(data.getId(), data.getState(), data.getUserOrder(), localDateTime)));
-        state[0] = data.getState();
+        state[0] = data.getState() + "";
         return state;
     }
 
@@ -237,9 +235,11 @@ public class OrderService extends OrderValidations {
         OrderEntity data = order.get();
         validateStateCancelled(data.getState(), data.getId());
         validateStateNotEarringForCancelled(data.getState(), data.getId());
-        data.setState("Cancelado");
+        data.setState(StateEnum.CANCELLED);
         orderRepository.save(data);
-        orderStateRepository.save(new OrderStateEntity(data.getId(), data.getState(), data.getUserOrder(), LocalDateTime.now()));
+        OrderStateEntity orderStateEntity = orderStateRepository.findByNumberOrderAndState(requestDto.getNumberOrder(), StateEnum.EARRING);
+        orderStateEntity.setEndState(LocalDateTime.now());
+        orderStateRepository.saveAll(List.of(orderStateEntity, new OrderStateEntity(data.getId(), data.getState(), data.getUserOrder(), LocalDateTime.now())));
         UserEntity user = userRepository.findById(data.getUserOrder().getId()).get();
         user.setOrderActive(!user.isOrderActive());
         userRepository.save(user);

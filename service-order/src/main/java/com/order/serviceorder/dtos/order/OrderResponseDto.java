@@ -3,6 +3,7 @@ package com.order.serviceorder.dtos.order;
 import com.order.serviceorder.dtos.dish.DishResponseDto;
 import com.order.serviceorder.dtos.employee.EmployeeRequestDto;
 import com.order.serviceorder.dtos.user.UserRequestDto;
+import com.order.serviceorder.enums.StateEnum;
 import com.order.serviceorder.externals.CampusEntity;
 import java.util.List;
 
@@ -11,7 +12,7 @@ public class OrderResponseDto {
     private Long id;
     private List<DishResponseDto> dishes;
     private CampusEntity campus;
-    private String state;
+    private StateEnum state;
     private UserRequestDto user;
     private EmployeeRequestDto employee;
     private String deliveryId;
@@ -19,7 +20,7 @@ public class OrderResponseDto {
     public OrderResponseDto() {
     }
 
-    public OrderResponseDto(Long id, String state, UserRequestDto user, EmployeeRequestDto employee, String deliveryId) {
+    public OrderResponseDto(Long id, StateEnum state, UserRequestDto user, EmployeeRequestDto employee, String deliveryId) {
         this.id = id;
         this.state = state;
         this.user = user;
@@ -56,11 +57,11 @@ public class OrderResponseDto {
         this.campus = campus;
     }
 
-    public String getState() {
+    public StateEnum getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(StateEnum state) {
         this.state = state;
     }
 

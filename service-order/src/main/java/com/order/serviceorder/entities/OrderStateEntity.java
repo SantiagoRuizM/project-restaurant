@@ -1,6 +1,7 @@
 package com.order.serviceorder.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.order.serviceorder.enums.StateEnum;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -15,7 +16,7 @@ public class OrderStateEntity {
     @Column(name = "number_order", nullable = false)
     private Long numberOrder;
     @Column(name = "state", nullable = false)
-    private String state;
+    private StateEnum state;
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "order_user", nullable = false)
     @JsonBackReference
@@ -28,7 +29,7 @@ public class OrderStateEntity {
     public OrderStateEntity() {
     }
 
-    public OrderStateEntity(Long numberOrder, String state, UserEntity userOrder, LocalDateTime endState) {
+    public OrderStateEntity(Long numberOrder, StateEnum state, UserEntity userOrder, LocalDateTime endState) {
         this.numberOrder = numberOrder;
         this.state = state;
         this.orderUser = userOrder;
@@ -51,11 +52,11 @@ public class OrderStateEntity {
         this.numberOrder = numberOrder;
     }
 
-    public String getState() {
+    public StateEnum getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(StateEnum state) {
         this.state = state;
     }
 

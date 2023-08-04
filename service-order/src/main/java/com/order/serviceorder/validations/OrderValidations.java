@@ -1,6 +1,7 @@
 package com.order.serviceorder.validations;
 
 import com.order.serviceorder.entities.OrderEntity;
+import com.order.serviceorder.enums.StateEnum;
 import com.order.serviceorder.exceptions.*;
 
 import java.util.Optional;
@@ -39,23 +40,23 @@ public class OrderValidations {
         if (order.isEmpty()) throw new RecordNotFoundException("The order with delivery id " + deliveryId + ": was not found");
     }
 
-    public static void validateStateEarring(String state, Long id) {
-        if (state.equals("Entregado")) throw new StateDeliveryException("The order with id " + id + ": must have an assigned employee before changing status");
+    public static void validateStateEarring(StateEnum state, Long id) {
+        if (state.equals(StateEnum.EARRING)) throw new StateDeliveryException("The order with id " + id + ": must have an assigned employee before changing status");
     }
 
-    public static void validateStateFinish(String state, Long id) {
-        if (state.equals("Entregado")) throw new StateDeliveryException("The order with id " + id + ": has already been delivered");
+    public static void validateStateFinish(StateEnum state, Long id) {
+        if (state.equals(StateEnum.DELIVERED)) throw new StateDeliveryException("The order with id " + id + ": has already been delivered");
     }
 
-    public static void validateStateCancelled(String state, Long id) {
-        if (state.equals("Cancelado")) throw new OrderCancelledException("The order with id " + id + ": has already been canceled");
+    public static void validateStateCancelled(StateEnum state, Long id) {
+        if (state.equals(StateEnum.CANCELLED)) throw new OrderCancelledException("The order with id " + id + ": has already been canceled");
     }
 
-    public static void validateStateNotEarringForCancelled(String state, Long id) {
-        if (!state.equals("Pendiente")) throw new OrderInPreparationException("The order with id " + id + ": you can only assign an employee when the order is pending");
+    public static void validateStateNotEarringForCancelled(StateEnum state, Long id) {
+        if (!state.equals(StateEnum.EARRING)) throw new OrderInPreparationException("The order with id " + id + ": you can only assign an employee when the order is pending");
     }
 
-    public static void validateStateNotEarringForAssignEmployee(String state, Long id) {
-        if (!state.equals("Pendiente")) throw new OrderInPreparationException("The order with id " + id + ": sorry, you order is already in preparation and cannot be canceled");
+    public static void validateStateNotEarringForAssignEmployee(StateEnum state, Long id) {
+        if (!state.equals(StateEnum.EARRING)) throw new OrderInPreparationException("The order with id " + id + ": sorry, you order is already in preparation and cannot be canceled");
     }
 }
