@@ -11,10 +11,7 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = {UserMapper.class})
 public interface OrderStateMapper {
 
-    @Mappings({
-            @Mapping(source = "orderUser", target = "user"),
-            @Mapping(target = "timeState", ignore = true)
-    })
+    @Mapping(target = "timeState", ignore = true)
     OrderStateResponseDto entityToResponse(OrderStateEntity entity);
     List<OrderStateResponseDto> entitiesToResponses(List<OrderStateEntity> entities);
 }

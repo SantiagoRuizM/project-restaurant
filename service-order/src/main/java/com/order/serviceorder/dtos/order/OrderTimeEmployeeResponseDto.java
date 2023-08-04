@@ -4,13 +4,13 @@ import com.order.serviceorder.dtos.employee.EmployeeResponseDto;
 public class OrderTimeEmployeeResponseDto {
 
     private String timeOrder;
-    private EmployeeResponseDto employee;
+    private String employee;
     private Integer quantityOrders;
 
     public OrderTimeEmployeeResponseDto() {
     }
 
-    public OrderTimeEmployeeResponseDto(EmployeeResponseDto employee) {
+    public OrderTimeEmployeeResponseDto(String employee) {
         this.employee = employee;
     }
 
@@ -22,11 +22,11 @@ public class OrderTimeEmployeeResponseDto {
         this.timeOrder = timeOrder;
     }
 
-    public EmployeeResponseDto getEmployee() {
+    public String getEmployee() {
         return employee;
     }
 
-    public void setEmployee(EmployeeResponseDto employee) {
+    public void setEmployee(String employee) {
         this.employee = employee;
     }
 

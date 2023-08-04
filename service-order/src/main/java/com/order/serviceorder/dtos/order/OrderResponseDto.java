@@ -8,6 +8,7 @@ import java.util.List;
 
 public class OrderResponseDto {
 
+    private Long id;
     private List<DishResponseDto> dishes;
     private CampusEntity campus;
     private String state;
@@ -18,7 +19,8 @@ public class OrderResponseDto {
     public OrderResponseDto() {
     }
 
-    public OrderResponseDto(String state, UserRequestDto user, EmployeeRequestDto employee, String deliveryId) {
+    public OrderResponseDto(Long id, String state, UserRequestDto user, EmployeeRequestDto employee, String deliveryId) {
+        this.id = id;
         this.state = state;
         this.user = user;
         this.employee = employee;
@@ -28,6 +30,14 @@ public class OrderResponseDto {
     public OrderResponseDto(CampusEntity campus, String deliveryId) {
         this.campus = campus;
         this.deliveryId = deliveryId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public List<DishResponseDto> getDishes() {

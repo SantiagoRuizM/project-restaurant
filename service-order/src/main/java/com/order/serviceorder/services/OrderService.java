@@ -3,7 +3,6 @@ package com.order.serviceorder.services;
 import com.order.serviceorder.dtos.PageGeneric;
 import com.order.serviceorder.dtos.dish.DishForOrderDto;
 import com.order.serviceorder.dtos.dish.DishResponseDto;
-import com.order.serviceorder.dtos.employee.EmployeeResponseDto;
 import com.order.serviceorder.dtos.order.*;
 import com.order.serviceorder.entities.*;
 import com.order.serviceorder.exceptions.*;
@@ -82,7 +81,7 @@ public class OrderService extends OrderValidations {
         try {
             List<OrderResponseDto> responsesDto = new ArrayList<>();
             for ( OrderEntity order : orderEntities ) {
-                OrderResponseDto responseDto = new OrderResponseDto(order.getState(), userMapper.entityToRequest(order.getUserOrder()), employeeMapper.entityToRequest(order.getEmployeeOrder()), order.getDeliveryId());
+                OrderResponseDto responseDto = new OrderResponseDto(order.getId(), order.getState(), userMapper.entityToRequest(order.getUserOrder()), employeeMapper.entityToRequest(order.getEmployeeOrder()), order.getDeliveryId());
                 List<OrderDishDetailsEntity> dishesEntity = orderDishDetailsRepository.findByOrderDish(order);
                 List<DishResponseDto> dishEntities = new ArrayList<>();
                 for ( OrderDishDetailsEntity dishDetails : dishesEntity) {
@@ -151,7 +150,7 @@ public class OrderService extends OrderValidations {
         List<EmployeeEntity> employees = employeeRepository.findAll();
         for ( EmployeeEntity employee : employees ) {
             long quantityOrders = 0;
-            OrderTimeEmployeeResponseDto responseDto = new OrderTimeEmployeeResponseDto(new EmployeeResponseDto(employee.getName()));
+            OrderTimeEmployeeResponseDto responseDto = new OrderTimeEmployeeResponseDto(employee.getName());
             Duration durationGeneral = Duration.ZERO;
             List<OrderEntity> orders = orderRepository.findByEndOrderIsNotNullAndEmployeeOrder(employee);
             for ( OrderEntity order : orders ) {
