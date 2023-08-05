@@ -13,6 +13,10 @@ public class DishEntity {
     public DishEntity() {
     }
 
+    public DishEntity(String name) {
+        this.name = name;
+    }
+
     public DishEntity(String name, Long price, String description, String urlImage, CategoryEntity category, CampusEntity campus, boolean active) {
         this.name = name;
         this.price = price;

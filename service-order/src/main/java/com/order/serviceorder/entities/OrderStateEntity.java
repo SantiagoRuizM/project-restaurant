@@ -29,10 +29,10 @@ public class OrderStateEntity {
     public OrderStateEntity() {
     }
 
-    public OrderStateEntity(Long numberOrder, StateEnum state, UserEntity userOrder, LocalDateTime endState) {
+    public OrderStateEntity(Long numberOrder, StateEnum state, UserEntity orderUser, LocalDateTime endState) {
         this.numberOrder = numberOrder;
         this.state = state;
-        this.orderUser = userOrder;
+        this.orderUser = orderUser;
         this.endState = endState;
     }
 

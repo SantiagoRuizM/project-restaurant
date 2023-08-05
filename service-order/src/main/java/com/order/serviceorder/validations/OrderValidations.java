@@ -8,8 +8,12 @@ import java.util.Optional;
 
 public class OrderValidations {
 
+    public static void validateFactRequired(Object data, String typeData) {
+        if (data == null) throw new FactRequiredException("The " + typeData + " is required");
+    }
+
     public static void validateDishActive(boolean active, Long id) {
-        if (active) throw new InactiveDishException("The dish with id " + id + ": is not active");
+        if (!active) throw new InactiveDishException("The dish with id " + id + ": is not active");
     }
 
     public static void validateDishCampus(Long campusDish, Long campusOrder, Long id) {
@@ -29,7 +33,7 @@ public class OrderValidations {
     }
 
     public static void validatePage(int page, int size) {
-        if (page * 10 > size) throw new InvalidPageException("The page " + (page + 1) + ": does not exist");
+        if (page * 10 >= size && size != 0) throw new InvalidPageException("The page " + (page + 1) + ": does not exist");
     }
 
     public static void validateOrderPresent(Optional<OrderEntity> order, Long id) {
@@ -41,11 +45,11 @@ public class OrderValidations {
     }
 
     public static void validateStateEarring(StateEnum state, Long id) {
-        if (state.equals(StateEnum.EARRING)) throw new StateDeliveryException("The order with id " + id + ": must have an assigned employee before changing status");
+        if (state.equals(StateEnum.EARRING)) throw new OrderEarringException("The order with id " + id + ": must have an assigned employee before changing status");
     }
 
-    public static void validateStateFinish(StateEnum state, Long id) {
-        if (state.equals(StateEnum.DELIVERED)) throw new StateDeliveryException("The order with id " + id + ": has already been delivered");
+    public static void validateStateDelivered(StateEnum state, Long id) {
+        if (state.equals(StateEnum.DELIVERED)) throw new OrderDeliveryException("The order with id " + id + ": has already been delivered");
     }
 
     public static void validateStateCancelled(StateEnum state, Long id) {

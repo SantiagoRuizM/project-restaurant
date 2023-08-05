@@ -1,11 +1,11 @@
 package com.order.serviceorder.mappers;
 
 import com.order.serviceorder.dtos.user.UserRequestDto;
+import com.order.serviceorder.dtos.user.UserResponseDto;
 import com.order.serviceorder.entities.UserEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-
 import java.util.List;
 
 @Mapper(componentModel = "spring")
@@ -20,4 +20,7 @@ public interface UserMapper {
 
     UserRequestDto entityToRequest(UserEntity user);
     List<UserRequestDto> entitiesToRequests(List<UserEntity> userEntities);
+
+    UserResponseDto entityToResponse(UserEntity user);
+    List<UserResponseDto> entitiesToResponses(List<UserEntity> userEntities);
 }

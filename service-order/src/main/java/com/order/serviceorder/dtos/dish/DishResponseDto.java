@@ -4,6 +4,7 @@ import com.order.serviceorder.externals.CategoryEntity;
 
 public class DishResponseDto {
 
+    private Long id;
     private String name;
     private Long price;
     private CategoryEntity category;
@@ -12,11 +13,20 @@ public class DishResponseDto {
     public DishResponseDto() {
     }
 
-    public DishResponseDto(String name, Long price, CategoryEntity category, Long quantity) {
+    public DishResponseDto(Long id, String name, Long price, CategoryEntity category, Long quantity) {
+        this.id = id;
         this.name = name;
         this.price = price;
         this.category = category;
         this.quantity = quantity;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
