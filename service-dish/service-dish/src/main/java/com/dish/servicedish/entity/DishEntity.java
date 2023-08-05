@@ -26,7 +26,7 @@ public class DishEntity {
     @JoinColumn(name = "category", nullable = false)
     @JsonBackReference
     private CategoryEntity category;
-    @Column(name = "active", nullable = false)
+    @Column(name = "active")
     private boolean active = true;
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "campus", nullable = false)

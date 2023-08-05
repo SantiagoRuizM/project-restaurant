@@ -58,11 +58,9 @@ public class DishController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Map<String, String>> deleteDish(@PathVariable Long id) {
-        if (service.deleteDish(id)) {
-            Map<String, String> map = new HashMap<>();
-            map.put("message", "Deleted success!");
-            return new ResponseEntity<>(map, HttpStatus.ACCEPTED);
-        }
-        else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        service.deleteDish(id);
+        Map<String, String> map = new HashMap<>();
+        map.put("message", "Deleted success!");
+        return new ResponseEntity<>(map, HttpStatus.ACCEPTED);
     }
 }

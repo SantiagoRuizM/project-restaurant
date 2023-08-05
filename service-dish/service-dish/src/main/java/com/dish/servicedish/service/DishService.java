@@ -28,22 +28,30 @@ public class DishService extends DishValidations {
     private DishMapper mapper;
 
     public void createDish(DishRequestDto dish) {
+        validateFactRequired(dish.getName(), "name");
+        validateFactRequired(dish.getPrice(), "price");
+        validateFactRequired(dish.getDescription(), "description");
+        validateFactRequired(dish.getUrlImage(), "image url");
+        validateFactRequired(dish.getCategory(), "category");
+        validateFactRequired(dish.getCampus(), "campus");
         validatePriceNegative(dish.getPrice());
         repository.save(mapper.requestToEntity(dish));
     }
 
     @Transactional(readOnly = true)
     public DishResponseDto getDish(Long id) {
-        return mapper.entityToResponse(repository.findById(id)
-                .orElseThrow(() -> new RecordNotFoundException("The dish with id " + id + ": was not found")));
+        Optional<DishEntity> dish = repository.findById(id);
+        validateDishPresent(dish, id);
+        return mapper.entityToResponse(dish.get());
     }
 
     @Transactional(readOnly = true)
     public PageGeneric<List<DishResponseDto>> getAllDishesCategoryCampus(Long category, Long campus, int page) {
-        List<DishResponseDto> dishResponseDtoList;
-        if (campus == null && category == null) dishResponseDtoList = mapper.entitiesToResponses(repository.findAll());
-        else if (campus == null || category == null) dishResponseDtoList = mapper.entitiesToResponses(repository.findByCategoryIdOrCampusId(category, campus));
-        else dishResponseDtoList = mapper.entitiesToResponses(repository.findByCategoryIdAndCampusId(category, campus));
+        List<DishResponseDto> dishResponseDtoList = switch (validateFilterByCampusCategory(category, campus)) {
+            case 1 -> mapper.entitiesToResponses(repository.findAll());
+            case 2 -> mapper.entitiesToResponses(repository.findByCategoryIdOrCampusId(category, campus));
+            default -> mapper.entitiesToResponses(repository.findByCategoryIdAndCampusId(category, campus));
+        };
         validatePage(page, dishResponseDtoList.size());
         List<DishResponseDto> responseDto = dishResponseDtoList.subList(page * 10, Math.min(page * 10 + 10, dishResponseDtoList.size()));
         Page<DishResponseDto> info = new PageImpl<>(responseDto, PageRequest.of(page, 10), dishResponseDtoList.size());
@@ -56,6 +64,9 @@ public class DishService extends DishValidations {
     }
 
     public DishResponseDto updateDishPriceCampusDescription(Long id, DishUpdateRequestDto dish) {
+        validateFactRequired(dish.getPrice(), "price");
+        validateFactRequired(dish.getDescription(), "description");
+        validateFactRequired(dish.getCampus(), "campus");
         Optional<DishEntity> request = repository.findById(id);
         validateDishPresent(request, id);
         DishEntity data = request.get();
@@ -73,9 +84,8 @@ public class DishService extends DishValidations {
         return mapper.entityToResponse(repository.save(data));
     }
 
-    public boolean deleteDish(Long id) {
+    public void deleteDish(Long id) {
         validateDishPresent(repository.findById(id), id);
         repository.deleteById(id);
-        return true;
     }
 }

@@ -9,6 +9,7 @@ import java.util.List;
 public interface DishRepository extends JpaRepository<DishEntity, Long> {
 
     List<DishEntity> findByCategoryIdAndCampusId(Long category, Long campus);
+
     List<DishEntity> findByCategoryIdOrCampusId(Long category, Long campus);
 
     List<DishEntity> findByActive(boolean active);

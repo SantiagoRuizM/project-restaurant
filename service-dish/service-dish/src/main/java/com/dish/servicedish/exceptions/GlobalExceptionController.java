@@ -23,4 +23,9 @@ public class GlobalExceptionController {
     public ResponseEntity<ResponseErrorDto> handlerInvalidPageException(InvalidPageException invalidPageException) {
         return new ResponseEntity<>(new ResponseErrorDto(invalidPageException.getMessage(), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(FactRequiredException.class)
+    public ResponseEntity<ResponseErrorDto> handlerFactRequiredException(FactRequiredException factRequiredException) {
+        return new ResponseEntity<>(new ResponseErrorDto(factRequiredException.getMessage(), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+    }
 }

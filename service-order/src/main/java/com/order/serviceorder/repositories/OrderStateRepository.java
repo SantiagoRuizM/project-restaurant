@@ -10,5 +10,6 @@ import java.util.List;
 public interface OrderStateRepository extends JpaRepository<OrderStateEntity, Long> {
 
     List<OrderStateEntity> findByNumberOrderOrderById(Long numberOrder);
+
     OrderStateEntity findByNumberOrderAndState(Long numberOrder, StateEnum state);
 }
