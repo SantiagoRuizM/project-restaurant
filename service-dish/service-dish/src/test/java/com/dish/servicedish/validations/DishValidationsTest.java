@@ -52,12 +52,12 @@ public class DishValidationsTest {
     }
 
     @org.junit.Test
-    public void validateOrderPresent_when_order_for_id_is_present() {
+    public void validateDishPresent_when_dish_for_id_is_present() {
         DishValidations.validateDishPresent(Optional.of(new DishEntity()), 0L);
     }
 
     @org.junit.Test(expected = RecordNotFoundException.class)
-    public void validateOrderPresent_when_order_for_id_is_not_present() {
+    public void validateDishPresent_when_dish_for_id_is_not_present() {
         DishValidations.validateDishPresent(Optional.empty(), 0L);
     }
 

@@ -38,6 +38,7 @@ public class ClaimController {
         claimService.updateClaimAccepted(claimActionRequestDto);
         Map<String, String> map = new HashMap<>();
         map.put("message", "Updated success!");
+        map.put("decision", "Accepted!");
         map.put("actionClaim", claimActionRequestDto.getActionClaim());
         return new ResponseEntity<>(map, HttpStatus.ACCEPTED);
     }
@@ -47,6 +48,7 @@ public class ClaimController {
         claimService.updateClaimRejected(claimActionRequestDto);
         Map<String, String> map = new HashMap<>();
         map.put("message", "Updated success!");
+        map.put("decision", "Rejected!");
         map.put("actionClaim", claimActionRequestDto.getActionClaim());
         return new ResponseEntity<>(map, HttpStatus.ACCEPTED);
     }
