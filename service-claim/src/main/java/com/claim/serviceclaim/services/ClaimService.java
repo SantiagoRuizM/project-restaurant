@@ -26,7 +26,7 @@ public class ClaimService extends ClaimValidations {
         validateFactRequired(claimRequestDto.getDeliveryId(), "delivery id");
         validateFactRequired(claimRequestDto.getReasonClaim(), "reason claim");
         try {
-            OrderClaimResponseDto responseDto = restTemplate.getForObject("http://localhost:8082/serviceOrders/orders/get/delivery?deliveryId=" + claimRequestDto.getDeliveryId(), OrderClaimResponseDto.class);
+            OrderClaimResponseDto responseDto = restTemplate.getForObject("http://SERVICE-ORDER/serviceOrders/orders/get/delivery?deliveryId=" + claimRequestDto.getDeliveryId(), OrderClaimResponseDto.class);
             claimRepository.save(new ClaimEntity(claimRequestDto.getDeliveryId(), responseDto.getCampus().getId(), claimRequestDto.getReasonClaim()));
         } catch (Exception e) {
             throw new DishFailedResponseControllerException(e.getMessage());

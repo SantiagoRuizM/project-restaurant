@@ -64,7 +64,7 @@ public class OrderService extends OrderValidations {
         for ( DishForOrderDto value : dto.getDish() ) {
             DishEntity entity;
             try {
-                entity = restTemplate.getForObject("http://localhost:8081/serviceDishes/dishes/get/" + value.getIdDish(), DishEntity.class);
+                entity = restTemplate.getForObject("http://SERVICE-DISH/serviceDishes/dishes/get/" + value.getIdDish(), DishEntity.class);
             } catch (Exception e) {
                 throw new DishFailedResponseControllerException(e.getMessage());
             }
@@ -91,7 +91,7 @@ public class OrderService extends OrderValidations {
                     OrderDishDetailsEntity dishDetails = dishesEntity.get(i);
                     DishEntity entity;
                     try {
-                        entity = restTemplate.getForObject("http://localhost:8081/serviceDishes/dishes/get/" + dishDetails.getDish(), DishEntity.class);
+                        entity = restTemplate.getForObject("http://SERVICE-DISH/serviceDishes/dishes/get/" + dishDetails.getDish(), DishEntity.class);
                     } catch (Exception e) {
                         entity = new DishEntity("?????");
                     }
@@ -182,7 +182,7 @@ public class OrderService extends OrderValidations {
         CampusEntity campus = new CampusEntity();
         for ( OrderDishDetailsEntity dishDetails : dishesEntity) {
             try {
-                campus = restTemplate.getForObject("http://localhost:8081/serviceDishes/dishes/get/" + dishDetails.getDish(), DishEntity.class).getCampus();
+                campus = restTemplate.getForObject("http://SERVICE-DISH/serviceDishes/dishes/get/" + dishDetails.getDish(), DishEntity.class).getCampus();
             } catch (Exception e) {
                 throw new DishFailedResponseControllerException(e.getMessage());
             }
