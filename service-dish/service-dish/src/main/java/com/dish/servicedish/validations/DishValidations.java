@@ -18,7 +18,7 @@ public class DishValidations {
     }
 
     public static void validatePage(int page, int size) {
-        if (page * 10 > size) throw new InvalidPageException("The page " + (page + 1) + ": does not exist");
+        if (page * 10 >= size && size != 0) throw new InvalidPageException("The page " + (page + 1) + ": does not exist");
     }
 
     public static void validateDishPresent(Optional<DishEntity> dish, Long id) {
