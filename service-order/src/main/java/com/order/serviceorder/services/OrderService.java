@@ -45,15 +45,18 @@ public class OrderService extends OrderValidations {
     @Autowired
     private OrderMapper orderMapper;
     @Autowired
-    private DishMapper dishMapper;
-    @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private DishMapper dishMapper;
     @Autowired
     private EmployeeMapper employeeMapper;
     @Autowired
     private RestTemplate restTemplate;
 
     public void createOrder(OrderRequestDto dto) {
+        validateFactRequired(dto.getDish(), "list of dishes");
+        validateFactRequired(dto.getUser(), "user");
+        validateFactRequired(dto.getCampus(), "campus");
         validateUserExists(!userRepository.existsById(dto.getUser()), dto.getUser());
         UserEntity user = userRepository.findById(dto.getUser()).get();
         validateUserOrderActive(user.isOrderActive(), dto.getUser());
@@ -65,7 +68,7 @@ public class OrderService extends OrderValidations {
             } catch (Exception e) {
                 throw new DishFailedResponseControllerException(e.getMessage());
             }
-            validateDishActive(!entity.isActive(), value.getIdDish());
+            validateDishActive(entity.isActive(), value.getIdDish());
             validateDishCampus(entity.getCampus().getId(), dto.getCampus(), value.getIdDish());
         }
         OrderEntity orderEntity = orderRepository.save(order);
@@ -80,22 +83,27 @@ public class OrderService extends OrderValidations {
     @Transactional(readOnly = true)
     public List<OrderResponseDto> getAllOrdersGeneric(List<OrderEntity> orderEntities) {
         try {
-            List<OrderResponseDto> responsesDto = new ArrayList<>();
-            for ( OrderEntity order : orderEntities ) {
-                OrderResponseDto responseDto = new OrderResponseDto(order.getId(), order.getState(), userMapper.entityToRequest(order.getUserOrder()), employeeMapper.entityToRequest(order.getEmployeeOrder()), order.getDeliveryId());
+            return orderEntities.stream().map(order -> {
+                OrderResponseDto responseDto = new OrderResponseDto(order.getId(), order.getState(), userMapper.entityToResponse(order.getUserOrder()), employeeMapper.entityToResponse(order.getEmployeeOrder()), order.getDeliveryId());
                 List<OrderDishDetailsEntity> dishesEntity = orderDishDetailsRepository.findByOrderDish(order);
                 List<DishResponseDto> dishEntities = new ArrayList<>();
-                for ( OrderDishDetailsEntity dishDetails : dishesEntity) {
-                    DishEntity entity = restTemplate.getForObject("http://localhost:8081/serviceDishes/dishes/get/" + dishDetails.getDish(), DishEntity.class);
+                for (int i = 0; i < dishesEntity.size(); i++) {
+                    OrderDishDetailsEntity dishDetails = dishesEntity.get(i);
+                    DishEntity entity;
+                    try {
+                        entity = restTemplate.getForObject("http://localhost:8081/serviceDishes/dishes/get/" + dishDetails.getDish(), DishEntity.class);
+                    } catch (Exception e) {
+                        entity = new DishEntity("?????");
+                    }
                     DishResponseDto dish = dishMapper.entityToResponse(entity);
-                    responseDto.setCampus(entity.getCampus());
+                    dish.setId(dishDetails.getDish());
+                    if (i == 0) responseDto.setCampus(entity.getCampus());
                     dish.setQuantity(dishDetails.getQuantity());
                     dishEntities.add(dish);
                 }
                 responseDto.setDishes(dishEntities);
-                responsesDto.add(responseDto);
-            }
-            return responsesDto;
+                return responseDto;
+            }).collect(Collectors.toList());
         } catch (Exception e) {
             throw new DishFailedResponseControllerException(e.getMessage());
         }
@@ -188,7 +196,7 @@ public class OrderService extends OrderValidations {
         validateOrderPresent(order, id);
         OrderEntity data = order.get();
         validateStateNotEarringForAssignEmployee(data.getState(), id);
-        validateEmployeeExists(!employeeRepository.existsById(employee), employee);
+        validateEmployeeExists(employeeRepository.existsById(employee), employee);
         data.setEmployeeOrder(new EmployeeEntity(employee));
         data.setState(StateEnum.IN_PREPARATION);
         orderRepository.save(data);
@@ -202,7 +210,7 @@ public class OrderService extends OrderValidations {
         validateOrderPresent(order, id);
         OrderEntity data = order.get();
         validateStateEarring(data.getState(), id);
-        validateStateFinish(data.getState(), id);
+        validateStateDelivered(data.getState(), id);
         validateStateCancelled(data.getState(), id);
         String[] state = new String[2];
         LocalDateTime localDateTime = null;

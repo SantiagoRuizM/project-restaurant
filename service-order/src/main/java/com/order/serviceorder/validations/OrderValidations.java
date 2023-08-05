@@ -3,7 +3,6 @@ package com.order.serviceorder.validations;
 import com.order.serviceorder.entities.OrderEntity;
 import com.order.serviceorder.enums.StateEnum;
 import com.order.serviceorder.exceptions.*;
-
 import java.util.Optional;
 
 public class OrderValidations {
@@ -25,7 +24,7 @@ public class OrderValidations {
     }
 
     public static void validateEmployeeExists(boolean exists, Long id) {
-        if (exists) throw new RecordNotFoundException("The employee with id " + id + ": was not found");
+        if (!exists) throw new RecordNotFoundException("The employee with id " + id + ": was not found");
     }
 
     public static void validateUserOrderActive(boolean active, Long id) {

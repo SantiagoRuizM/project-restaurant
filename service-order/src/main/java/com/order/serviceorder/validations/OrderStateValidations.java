@@ -1,11 +1,8 @@
 package com.order.serviceorder.validations;
 
-import com.order.serviceorder.entities.OrderEntity;
 import com.order.serviceorder.entities.OrderStateEntity;
 import com.order.serviceorder.exceptions.RecordNotFoundException;
-
 import java.util.List;
-import java.util.Optional;
 
 public class OrderStateValidations {
 
