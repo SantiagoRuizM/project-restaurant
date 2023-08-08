@@ -19,4 +19,9 @@ public class GlobalExceptionController {
     public ResponseEntity<ResponseErrorDto> handlerRecordNotFoundException(RecordNotFoundException recordNotFoundException) {
         return new ResponseEntity<>(new ResponseErrorDto(recordNotFoundException.getMessage(), HttpStatus.NOT_FOUND), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(FactRequiredException.class)
+    public ResponseEntity<ResponseErrorDto> handlerFactRequiredException(FactRequiredException factRequiredException) {
+        return new ResponseEntity<>(new ResponseErrorDto(factRequiredException.getMessage(), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+    }
 }

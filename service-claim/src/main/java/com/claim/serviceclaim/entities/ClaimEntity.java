@@ -1,5 +1,6 @@
 package com.claim.serviceclaim.entities;
 
+import com.claim.serviceclaim.enums.ActionEnum;
 import jakarta.persistence.*;
 
 @Entity(name = "claim_entity")
@@ -16,7 +17,7 @@ public class ClaimEntity {
     @Column(name = "reason_claim", nullable = false)
     private String reasonClaim;
     @Column(name = "accepted")
-    private boolean accepted = false;
+    private ActionEnum accepted = ActionEnum.EARRING;
     @Column(name = "action_claim")
     private String actionClaim = null;
 
@@ -61,11 +62,11 @@ public class ClaimEntity {
         this.reasonClaim = reasonClaim;
     }
 
-    public boolean isAccepted() {
+    public ActionEnum getAccepted() {
         return accepted;
     }
 
-    public void setAccepted(boolean accepted) {
+    public void setAccepted(ActionEnum accepted) {
         this.accepted = accepted;
     }
 

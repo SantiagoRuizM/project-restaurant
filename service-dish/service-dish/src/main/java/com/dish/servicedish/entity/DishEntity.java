@@ -50,11 +50,15 @@ public class DishEntity {
     @JoinColumn(name = "category", nullable = false)
     @JsonBackReference
     private CategoryEntity category;
+<<<<<<< HEAD
 
     /**
      * Indicates whether the dish is currently active or not.
      */
     @Column(name = "active", nullable = false)
+=======
+    @Column(name = "active")
+>>>>>>> 8b2117e6d9fb21123e670d57dacf9bc00b0f2e73
     private boolean active = true;
 
     /**

@@ -1,43 +1,34 @@
 package com.order.serviceorder.dtos.orderState;
 
 import com.order.serviceorder.dtos.user.UserResponseDto;
+import com.order.serviceorder.enums.StateEnum;
 
 public class OrderStateResponseDto {
 
-    private Long numberOrder;
-    private String state;
-    private UserResponseDto user;
+    private StateEnum state;
+    private String timeState;
 
     public OrderStateResponseDto() {
     }
 
-    public OrderStateResponseDto(Long numberOrder, String state, UserResponseDto user) {
-        this.numberOrder = numberOrder;
+    public OrderStateResponseDto(StateEnum state, String timeState) {
         this.state = state;
-        this.user = user;
+        this.timeState = timeState;
     }
 
-    public Long getNumberOrder() {
-        return numberOrder;
-    }
-
-    public void setNumberOrder(Long numberOrder) {
-        this.numberOrder = numberOrder;
-    }
-
-    public String getState() {
+    public StateEnum getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(StateEnum state) {
         this.state = state;
     }
 
-    public UserResponseDto getUser() {
-        return user;
+    public String getTimeState() {
+        return timeState;
     }
 
-    public void setUser(UserResponseDto user) {
-        this.user = user;
+    public void setTimeState(String timeState) {
+        this.timeState = timeState;
     }
 }

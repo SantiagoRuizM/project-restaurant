@@ -16,6 +16,7 @@ public class OrderDishDetailsEntity {
     @JoinColumn(name = "order_dish", nullable = false)
     @JsonBackReference
     private OrderEntity orderDish;
+    @Column(name = "dish", nullable = false)
     private Long dish;
 
     public OrderDishDetailsEntity() {

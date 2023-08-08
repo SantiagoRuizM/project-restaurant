@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.order.serviceorder.enums.StateEnum;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,7 +24,7 @@ public class OrderEntity {
     @Column(name = "campus", nullable = false)
     private Long campus;
     @Column(name = "state", nullable = false)
-    private String state = "Pendiente";
+    private StateEnum state = StateEnum.EARRING;
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_order_id", nullable = false)
     @JsonBackReference
@@ -42,7 +43,7 @@ public class OrderEntity {
     public OrderEntity() {
     }
 
-    public OrderEntity(Long id, List<OrderDishDetailsEntity> ordersDish, Long campus, String state, UserEntity userOrder, EmployeeEntity employeeOrder, String deliveryId, LocalDateTime startOrder, LocalDateTime endOrder) {
+    public OrderEntity(Long id, List<OrderDishDetailsEntity> ordersDish, Long campus, StateEnum state, UserEntity userOrder, EmployeeEntity employeeOrder, String deliveryId, LocalDateTime startOrder, LocalDateTime endOrder) {
         this.id = id;
         this.ordersDish = ordersDish;
         this.campus = campus;
@@ -78,11 +79,11 @@ public class OrderEntity {
         this.campus = campus;
     }
 
-    public String getState() {
+    public StateEnum getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(StateEnum state) {
         this.state = state;
     }
 

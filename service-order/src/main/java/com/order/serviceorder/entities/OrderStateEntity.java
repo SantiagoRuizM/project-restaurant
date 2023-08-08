@@ -1,7 +1,10 @@
 package com.order.serviceorder.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.order.serviceorder.enums.StateEnum;
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 
 @Entity(name = "order_state_entity")
 public class OrderStateEntity {
@@ -13,19 +16,24 @@ public class OrderStateEntity {
     @Column(name = "number_order", nullable = false)
     private Long numberOrder;
     @Column(name = "state", nullable = false)
-    private String state;
+    private StateEnum state;
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "order_user", nullable = false)
     @JsonBackReference
     private UserEntity orderUser;
+    @Column(name = "start_state", nullable = false)
+    private LocalDateTime startState = LocalDateTime.now();
+    @Column(name = "end_state")
+    private LocalDateTime endState;
 
     public OrderStateEntity() {
     }
 
-    public OrderStateEntity(Long numberOrder, String state, UserEntity userOrder) {
+    public OrderStateEntity(Long numberOrder, StateEnum state, UserEntity orderUser, LocalDateTime endState) {
         this.numberOrder = numberOrder;
         this.state = state;
-        this.orderUser = userOrder;
+        this.orderUser = orderUser;
+        this.endState = endState;
     }
 
     public Long getId() {
@@ -44,11 +52,11 @@ public class OrderStateEntity {
         this.numberOrder = numberOrder;
     }
 
-    public String getState() {
+    public StateEnum getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(StateEnum state) {
         this.state = state;
     }
 
@@ -58,5 +66,21 @@ public class OrderStateEntity {
 
     public void setOrderUser(UserEntity orderUser) {
         this.orderUser = orderUser;
+    }
+
+    public LocalDateTime getStartState() {
+        return startState;
+    }
+
+    public void setStartState(LocalDateTime startState) {
+        this.startState = startState;
+    }
+
+    public LocalDateTime getEndState() {
+        return endState;
+    }
+
+    public void setEndState(LocalDateTime endState) {
+        this.endState = endState;
     }
 }

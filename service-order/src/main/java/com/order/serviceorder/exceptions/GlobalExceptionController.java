@@ -35,9 +35,14 @@ public class GlobalExceptionController {
         return new ResponseEntity<>(new ResponseErrorDto(recordNotFoundException.getMessage(), HttpStatus.NOT_FOUND), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(StateDeliveryException.class)
-    public ResponseEntity<ResponseErrorDto> handlerStateDeliveryException(StateDeliveryException stateDeliveryException) {
-        return new ResponseEntity<>(new ResponseErrorDto(stateDeliveryException.getMessage(), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(OrderDeliveryException.class)
+    public ResponseEntity<ResponseErrorDto> handlerOrderDeliveryException(OrderDeliveryException orderDeliveryException) {
+        return new ResponseEntity<>(new ResponseErrorDto(orderDeliveryException.getMessage(), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(OrderEarringException.class)
+    public ResponseEntity<ResponseErrorDto> handlerOrderEarringException(OrderEarringException orderEarringException) {
+        return new ResponseEntity<>(new ResponseErrorDto(orderEarringException.getMessage(), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(OrderInPreparationException.class)
@@ -48,5 +53,10 @@ public class GlobalExceptionController {
     @ExceptionHandler(OrderCancelledException.class)
     public ResponseEntity<ResponseErrorDto> handlerOrderCancelledException(OrderCancelledException orderCancelledException) {
         return new ResponseEntity<>(new ResponseErrorDto(orderCancelledException.getMessage(), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(FactRequiredException.class)
+    public ResponseEntity<ResponseErrorDto> handlerFactRequiredException(FactRequiredException factRequiredException) {
+        return new ResponseEntity<>(new ResponseErrorDto(factRequiredException.getMessage(), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
     }
 }

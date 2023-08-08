@@ -2,6 +2,7 @@ package com.order.serviceorder.controllers;
 
 import com.order.serviceorder.dtos.PageGeneric;
 import com.order.serviceorder.dtos.order.*;
+import com.order.serviceorder.enums.StateEnum;
 import com.order.serviceorder.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,12 +33,12 @@ public class OrderController {
     }
 
     @GetMapping("/getAll/{state}/{campus}")
-    public ResponseEntity<PageGeneric<List<OrderResponseDto>>> getAllOrdersStateCampus(@PathVariable String state, @PathVariable Long campus, @RequestParam(value = "1")  int page) {
+    public ResponseEntity<PageGeneric<List<OrderResponseDto>>> getAllOrdersStateCampus(@PathVariable StateEnum state, @PathVariable Long campus, @RequestParam(value = "1")  int page) {
         return new ResponseEntity<>(service.getAllOrdersStateCampus(state, campus, page - 1), HttpStatus.OK);
     }
 
     @GetMapping("/getAll/{state}")
-    public ResponseEntity<PageGeneric<List<OrderResponseDto>>> getAllOrdersState(@PathVariable String state, @RequestParam(value = "1") int page) {
+    public ResponseEntity<PageGeneric<List<OrderResponseDto>>> getAllOrdersState(@PathVariable StateEnum state, @RequestParam(value = "1") int page) {
         return new ResponseEntity<>(service.getAllOrdersState(state, page - 1), HttpStatus.OK);
     }
 
@@ -57,18 +58,24 @@ public class OrderController {
     }
 
     @PutMapping("/update/stateOrder/{id}/{employee}")
-    public ResponseEntity<Map<String, String>> updateOrderEmployeeState(@PathVariable Long id, @PathVariable Long employee) {
+    public ResponseEntity<Map<String, String>> updateOrderEmployee(@PathVariable Long id, @PathVariable Long employee) {
+        service.updateOrderEmployee(id, employee);
         Map<String, String> map = new HashMap<>();
-        String[] state = service.updateOrderEmployeeState(id, employee);
-        switch (state[0]) {
-            case "Listo":
-                map.put("message", "Updated success!");
-                map.put("message to user: ", "Dear user, we inform you that your order is ready and can be claimed with the code: " + state[1]);
-                return new ResponseEntity<>(map, HttpStatus.ACCEPTED);
-            default:
-                map.put("message", "Updated success!");
-                return new ResponseEntity<>(map, HttpStatus.ACCEPTED);
+        map.put("message", "Updated success!");
+        return new ResponseEntity<>(map, HttpStatus.ACCEPTED);
+    }
+
+    @PutMapping("/update/state/{id}")
+    public ResponseEntity<Map<String, String>> updateOrderState(@PathVariable Long id) {
+        String[] state = service.updateOrderState(id);
+        Map<String, String> map = new HashMap<>();
+        if (state[0].equals(StateEnum.READY + "")) {
+            map.put("message", "Updated success!");
+            map.put("message to user: ", "Dear user, we inform you that your order is ready and can be claimed with the code: " + state[1]);
+            return new ResponseEntity<>(map, HttpStatus.ACCEPTED);
         }
+        map.put("message", "Updated success!");
+        return new ResponseEntity<>(map, HttpStatus.ACCEPTED);
     }
 
     @PutMapping("/update/cancelOrder")
